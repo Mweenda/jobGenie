@@ -30,6 +30,18 @@ dist-ssr
 .env.test.local
 .env.production.local
 
+# Testing
+coverage/
+.nyc_output/
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
 # Build outputs
 build/
 out/

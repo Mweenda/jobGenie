@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { X } from 'lucide-react'
+import { X, Mail, Lock, User } from 'lucide-react'
 import Button from '../../../components/base/Button'
 import Input from '../../../components/base/Input'
 
@@ -16,17 +16,51 @@ export default function AuthModal({ mode, onClose, onSuccess, onSwitchMode }: Au
     email: '',
     password: ''
   })
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {}
+    
+    if (!formData.email) {
+      newErrors.email = 'Email is required'
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid'
+    }
+    
+    if (!formData.password) {
+      newErrors.password = 'Password is required'
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters'
+    }
+    
+    if (mode === 'signup' && !formData.name) {
+      newErrors.name = 'Name is required'
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false)
+    if (!validateForm()) {
+      return
+    }
+    
+    setIsLoading(true)
+    setErrors({})
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500))
       onSuccess()
-    }, 1500)
+    } catch (error) {
+      setErrors({ general: 'Authentication failed. Please try again.' })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,6 +86,12 @@ export default function AuthModal({ mode, onClose, onSuccess, onSwitchMode }: Au
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {errors.general && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-3">
+              <p className="text-sm text-red-600">{errors.general}</p>
+            </div>
+          )}
+          
           {mode === 'signup' && (
             <Input
               label="Full Name"
@@ -61,6 +101,8 @@ export default function AuthModal({ mode, onClose, onSuccess, onSwitchMode }: Au
               value={formData.name}
               onChange={handleInputChange}
               placeholder="Enter your full name"
+              leftIcon={<User className="w-4 h-4" />}
+              error={errors.name}
             />
           )}
           
@@ -72,6 +114,8 @@ export default function AuthModal({ mode, onClose, onSuccess, onSwitchMode }: Au
             value={formData.email}
             onChange={handleInputChange}
             placeholder="Enter your email"
+            leftIcon={<Mail className="w-4 h-4" />}
+            error={errors.email}
           />
           
           <Input
@@ -82,14 +126,17 @@ export default function AuthModal({ mode, onClose, onSuccess, onSwitchMode }: Au
             value={formData.password}
             onChange={handleInputChange}
             placeholder="Enter your password"
+            leftIcon={<Lock className="w-4 h-4" />}
+            error={errors.password}
+            helperText={mode === 'signup' ? 'Must be at least 6 characters' : undefined}
           />
 
           <Button
             type="submit"
             className="w-full"
-            disabled={isLoading}
+            loading={isLoading}
           >
-            {isLoading ? 'Loading...' : mode === 'signin' ? 'Sign In' : 'Create Account'}
+            {mode === 'signin' ? 'Sign In' : 'Create Account'}
           </Button>
         </form>
 
