@@ -11,10 +11,18 @@
     "lint:fix": "eslint src --ext ts,tsx --fix",
     "type-check": "tsc --noEmit",
     "test": "vitest",
+    "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage",
+    "test:coverage": "vitest --coverage --reporter=text --reporter=json --reporter=html",
+    "test:coverage:threshold": "vitest --coverage --coverage.thresholds.statements=80 --coverage.thresholds.branches=75 --coverage.thresholds.functions=80 --coverage.thresholds.lines=80",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
     "format": "prettier --write src/**/*.{ts,tsx,js,jsx,json,css,md}",
-    "format:check": "prettier --check src/**/*.{ts,tsx,js,jsx,json,css,md}"
+    "format:check": "prettier --check src/**/*.{ts,tsx,js,jsx,json,css,md}",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "prepare": "husky install",
+    "validate": "npm run type-check && npm run lint && npm run test:coverage:threshold && npm run build"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -26,12 +34,15 @@
     "@supabase/supabase-js": "^2.39.0",
     "axios": "^1.6.2",
     "date-fns": "^3.0.6",
-    "zustand": "^4.4.7"
+    "zustand": "^4.4.7",
+    "clsx": "^2.0.0",
+    "class-variance-authority": "^0.7.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.1.2",
+    "@testing-library/testing-library": "^6.1.4",
     "@testing-library/user-event": "^14.5.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -43,8 +54,12 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^9.9.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
+    "eslint-plugin-testing-library": "^6.2.0",
     "globals": "^15.9.0",
     "husky": "^8.0.3",
     "jsdom": "^23.0.1",
@@ -55,6 +70,16 @@
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1",
-    "vitest": "^1.0.4"
+    "vitest": "^1.0.4",
+    "vitest-globals": "^1.0.4",
+    "@storybook/react": "^7.6.7",
+    "@storybook/react-vite": "^7.6.7",
+    "@storybook/addon-essentials": "^7.6.7",
+    "@storybook/addon-interactions": "^7.6.7",
+    "@storybook/addon-links": "^7.6.7",
+    "@storybook/addon-a11y": "^7.6.7",
+    "@storybook/testing-library": "^0.2.2",
+    "@playwright/test": "^1.40.1",
+    "storybook": "^7.6.7"
   }
 }

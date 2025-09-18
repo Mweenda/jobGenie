@@ -10,14 +10,30 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     css: true,
     coverage: {
-      reporter: ['text', 'json', 'html'],
+      provider: 'v8',
+      reporter: ['text', 'json', 'html', 'lcov'],
       exclude: [
         'node_modules/',
         'src/test/',
         '**/*.d.ts',
         '**/*.config.*',
+        '**/*.stories.*',
         'dist/',
+        'e2e/',
+        '.storybook/',
+        'coverage/',
+        'playwright-report/',
       ],
+      thresholds: {
+        statements: 80,
+        branches: 75,
+        functions: 80,
+        lines: 80,
+      },
+      all: true,
+      include: ['src/**/*.{ts,tsx}'],
     },
+    // Increase timeout for CI environments
+    testTimeout: process.env.CI ? 10000 : 5000,
   },
 })
