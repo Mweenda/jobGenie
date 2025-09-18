@@ -1,3 +1,4 @@
+
 ---
 
 # 🧞‍♂️ JobGenie — Your Personalized Job Discovery Genie
