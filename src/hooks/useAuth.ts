@@ -1,101 +1,57 @@
-import { useState, useEffect, createContext, useContext } from 'react'
-import { useLocalStorage } from './useLocalStorage'
-
-interface User {
-  id: string
-  email: string
-  name: string
-  avatar?: string
-}
-
-interface AuthState {
-  user: User | null
-  isLoading: boolean
-  isAuthenticated: boolean
-}
-
-interface AuthContextType extends AuthState {
-  signIn: (email: string, password: string) => Promise<void>
-  signUp: (name: string, email: string, password: string) => Promise<void>
-  signOut: () => void
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+import { useEffect } from 'react'
+import { useAuthStore } from '../store/authStore'
+import { AuthService } from '../services/authService'
 
 /**
  * Custom hook for authentication state management
- * Provides sign in, sign up, and sign out functionality
+ * Uses Zustand store and Supabase for real authentication
  */
 export function useAuth() {
-  const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
-  return context
-}
+  const {
+    user,
+    session,
+    isLoading,
+    isAuthenticated,
+    signIn,
+    signUp,
+    signOut,
+    updateProfile,
+    initialize,
+    setUser,
+    setSession,
+  } = useAuthStore()
 
-/**
- * Hook for managing authentication state
- * This is a mock implementation - replace with real auth service
- */
-export function useAuthState(): AuthContextType {
-  const [user, setUser] = useLocalStorage<User | null>('jobgenie_user', null)
-  const [isLoading, setIsLoading] = useState(false)
+  // Initialize auth state on mount
+  useEffect(() => {
+    initialize()
 
-  const signIn = async (email: string, password: string) => {
-    setIsLoading(true)
-    try {
-      // Mock API call - replace with real authentication
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      const mockUser: User = {
-        id: '1',
-        email,
-        name: email.split('@')[0],
-        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`
+    // Listen to auth state changes
+    const { data: { subscription } } = AuthService.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+          const userProfile = await AuthService.getUserProfile(session.user.id)
+          setUser(userProfile)
+          setSession(session)
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null)
+          setSession(null)
+        }
       }
-      
-      setUser(mockUser)
-    } catch (error) {
-      throw new Error('Invalid credentials')
-    } finally {
-      setIsLoading(false)
-    }
-  }
+    )
 
-  const signUp = async (name: string, email: string, password: string) => {
-    setIsLoading(true)
-    try {
-      // Mock API call - replace with real authentication
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      const mockUser: User = {
-        id: '1',
-        email,
-        name,
-        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`
-      }
-      
-      setUser(mockUser)
-    } catch (error) {
-      throw new Error('Registration failed')
-    } finally {
-      setIsLoading(false)
+    return () => {
+      subscription.unsubscribe()
     }
-  }
-
-  const signOut = () => {
-    setUser(null)
-  }
+  }, [initialize, setUser, setSession])
 
   return {
     user,
+    session,
     isLoading,
-    isAuthenticated: Boolean(user),
+    isAuthenticated,
     signIn,
     signUp,
-    signOut
+    signOut,
+    updateProfile,
   }
 }
-
-export { AuthContext }

@@ -53,11 +53,18 @@ export default function AuthModal({ mode, onClose, onSuccess, onSwitchMode }: Au
     setErrors({})
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      if (mode === 'signin') {
+        // For now, simulate the auth - will be replaced with real auth
+        await new Promise(resolve => setTimeout(resolve, 1500))
+      } else {
+        // For signup, simulate creating account
+        await new Promise(resolve => setTimeout(resolve, 1500))
+      }
       onSuccess()
     } catch (error) {
-      setErrors({ general: 'Authentication failed. Please try again.' })
+      setErrors({ 
+        general: error instanceof Error ? error.message : 'Authentication failed. Please try again.' 
+      })
     } finally {
       setIsLoading(false)
     }
