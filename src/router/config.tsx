@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import LandingPage from '../pages/landing/page'
 import HomePage from '../pages/home/page'
+import ProfilePage from '../pages/profile/page'
 import NotFound from '../pages/NotFound'
 
 export function AppRouter() {
@@ -8,6 +9,7 @@ export function AppRouter() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/home" element={<HomePage />} />
+      <Route path="/profile" element={<ProfilePage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )
