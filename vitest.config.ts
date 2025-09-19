@@ -35,5 +35,7 @@ export default defineConfig({
     },
     // Increase timeout for CI environments
     testTimeout: process.env.CI ? 10000 : 5000,
+    // Exclude E2E tests from unit test runner
+    exclude: ['**/node_modules/**', '**/e2e/**', '**/dist/**'],
   },
 })

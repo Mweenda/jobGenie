@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { X, MapPin, DollarSign, Clock, Building, Users, Star, Bookmark, BookmarkCheck, ExternalLink } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import Button from '../base/Button'
-import Input from '../base/Input'
+// import Input from '../base/Input'
 import { formatSalary, formatJobType, formatCompanySize } from '../../utils/format'
 import { formatJobPostedDate } from '../../utils/date'
 
@@ -45,7 +45,7 @@ export default function JobDetailModal({
   onApply, 
   isSaved = false 
 }: JobDetailModalProps) {
-  const { user, isAuthenticated } = useAuth()
+  const { isAuthenticated } = useAuth()
   const [showApplicationForm, setShowApplicationForm] = useState(false)
   const [coverLetter, setCoverLetter] = useState('')
   const [isApplying, setIsApplying] = useState(false)
@@ -181,7 +181,7 @@ export default function JobDetailModal({
                 <div className="grid grid-cols-2 gap-4 mb-3 text-sm">
                   <div className="flex items-center text-gray-600">
                     <Users className="w-4 h-4 mr-2" />
-                    {formatCompanySize(job.company.size)}
+                    {formatCompanySize(job.company.size || null)}
                   </div>
                   <div className="flex items-center text-gray-600">
                     <Building className="w-4 h-4 mr-2" />

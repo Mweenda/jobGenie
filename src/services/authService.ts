@@ -1,5 +1,23 @@
-import { supabase } from '../lib/supabase'
-import type { User } from '@supabase/supabase-js'
+import { auth, db } from '../lib/firebase'
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut, 
+  sendPasswordResetEmail, 
+  updateProfile,
+  onAuthStateChanged,
+  type User
+} from 'firebase/auth'
+import { 
+  doc, 
+  setDoc, 
+  getDoc, 
+  updateDoc, 
+  collection,
+  query,
+  where,
+  getDocs
+} from 'firebase/firestore'
 
 export interface AuthUser {
   id: string
@@ -27,7 +45,7 @@ export interface SignInData {
 }
 
 /**
- * Authentication service using Supabase Auth
+ * Authentication service using Firebase Auth
  * Handles user registration, login, logout, and profile management
  */
 export class AuthService {
@@ -36,27 +54,23 @@ export class AuthService {
    */
   static async signUp(userData: SignUpData) {
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: userData.email,
-        password: userData.password,
-        options: {
-          data: {
-            first_name: userData.firstName,
-            last_name: userData.lastName,
-            job_title: userData.jobTitle,
-            experience_level: userData.experienceLevel,
-          }
-        }
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        userData.email,
+        userData.password
+      )
+
+      const user = userCredential.user
+
+      // Update the display name
+      await updateProfile(user, {
+        displayName: `${userData.firstName} ${userData.lastName}`
       })
 
-      if (error) throw error
+      // Create user profile in Firestore
+      await this.createUserProfile(user, userData)
 
-      // Create user profile in our users table
-      if (data.user) {
-        await this.createUserProfile(data.user, userData)
-      }
-
-      return { user: data.user, session: data.session }
+      return { user, session: null }
     } catch (error) {
       console.error('Sign up error:', error)
       throw error
@@ -68,14 +82,13 @@ export class AuthService {
    */
   static async signIn(credentials: SignInData) {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: credentials.email,
-        password: credentials.password
-      })
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        credentials.email,
+        credentials.password
+      )
 
-      if (error) throw error
-
-      return { user: data.user, session: data.session }
+      return { user: userCredential.user, session: null }
     } catch (error) {
       console.error('Sign in error:', error)
       throw error
@@ -87,8 +100,7 @@ export class AuthService {
    */
   static async signOut() {
     try {
-      const { error } = await supabase.auth.signOut()
-      if (error) throw error
+      await signOut(auth)
     } catch (error) {
       console.error('Sign out error:', error)
       throw error
@@ -100,9 +112,7 @@ export class AuthService {
    */
   static async getCurrentSession() {
     try {
-      const { data: { session }, error } = await supabase.auth.getSession()
-      if (error) throw error
-      return session
+      return auth.currentUser
     } catch (error) {
       console.error('Get session error:', error)
       return null
@@ -114,9 +124,7 @@ export class AuthService {
    */
   static async getCurrentUser() {
     try {
-      const { data: { user }, error } = await supabase.auth.getUser()
-      if (error) throw error
-      return user
+      return auth.currentUser
     } catch (error) {
       console.error('Get user error:', error)
       return null
@@ -124,27 +132,27 @@ export class AuthService {
   }
 
   /**
-   * Get user profile from our users table
+   * Get user profile from Firestore
    */
   static async getUserProfile(userId: string): Promise<AuthUser | null> {
     try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', userId)
-        .single()
+      const docRef = doc(db, 'users', userId)
+      const docSnap = await getDoc(docRef)
 
-      if (error) throw error
+      if (!docSnap.exists()) {
+        return null
+      }
 
+      const data = docSnap.data()
       return {
         id: data.id,
         email: data.email,
-        firstName: data.first_name,
-        lastName: data.last_name,
-        jobTitle: data.job_title,
-        experienceLevel: data.experience_level,
-        profileImageUrl: data.profile_image_url,
-        resumeUrl: data.resume_url,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        jobTitle: data.jobTitle,
+        experienceLevel: data.experienceLevel,
+        profileImageUrl: data.profileImageUrl,
+        resumeUrl: data.resumeUrl,
       }
     } catch (error) {
       console.error('Get user profile error:', error)
@@ -157,23 +165,16 @@ export class AuthService {
    */
   static async updateUserProfile(userId: string, updates: Partial<AuthUser>) {
     try {
-      const { data, error } = await supabase
-        .from('users')
-        .update({
-          first_name: updates.firstName,
-          last_name: updates.lastName,
-          job_title: updates.jobTitle,
-          experience_level: updates.experienceLevel,
-          profile_image_url: updates.profileImageUrl,
-          resume_url: updates.resumeUrl,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', userId)
-        .select()
-        .single()
+      const docRef = doc(db, 'users', userId)
+      
+      await updateDoc(docRef, {
+        ...updates,
+        updatedAt: new Date().toISOString(),
+      })
 
-      if (error) throw error
-      return data
+      // Get the updated profile
+      const updatedProfile = await this.getUserProfile(userId)
+      return updatedProfile
     } catch (error) {
       console.error('Update user profile error:', error)
       throw error
@@ -181,22 +182,22 @@ export class AuthService {
   }
 
   /**
-   * Create user profile in our users table
+   * Create user profile in Firestore
    */
   private static async createUserProfile(user: User, userData: SignUpData) {
     try {
-      const { error } = await supabase
-        .from('users')
-        .insert({
-          id: user.id,
-          email: user.email!,
-          first_name: userData.firstName,
-          last_name: userData.lastName,
-          job_title: userData.jobTitle,
-          experience_level: userData.experienceLevel,
-        })
+      const profile = {
+        id: user.uid,
+        email: user.email!,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        jobTitle: userData.jobTitle,
+        experienceLevel: userData.experienceLevel,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
 
-      if (error) throw error
+      await setDoc(doc(db, 'users', user.uid), profile)
     } catch (error) {
       console.error('Create user profile error:', error)
       throw error
@@ -208,11 +209,7 @@ export class AuthService {
    */
   static async resetPassword(email: string) {
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      })
-
-      if (error) throw error
+      await sendPasswordResetEmail(auth, email)
     } catch (error) {
       console.error('Reset password error:', error)
       throw error
@@ -220,9 +217,24 @@ export class AuthService {
   }
 
   /**
+   * Check if email already exists
+   */
+  static async checkEmailExists(email: string): Promise<boolean> {
+    try {
+      const usersRef = collection(db, 'users')
+      const q = query(usersRef, where('email', '==', email))
+      const querySnapshot = await getDocs(q)
+      
+      return !querySnapshot.empty
+    } catch (error: any) {
+      throw new Error(`Failed to check email: ${error.message}`)
+    }
+  }
+
+  /**
    * Listen to auth state changes
    */
-  static onAuthStateChange(callback: (event: string, session: any) => void) {
-    return supabase.auth.onAuthStateChange(callback)
+  static onAuthStateChange(callback: (user: User | null) => void) {
+    return onAuthStateChanged(auth, callback)
   }
 }

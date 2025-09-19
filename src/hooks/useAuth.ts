@@ -4,12 +4,12 @@ import { AuthService } from '../services/authService'
 
 /**
  * Custom hook for authentication state management
- * Uses Zustand store and Supabase for real authentication
+ * Uses Zustand store and Firebase for authentication
  */
 export function useAuth() {
   const {
     user,
-    session,
+    firebaseUser,
     isLoading,
     isAuthenticated,
     signIn,
@@ -18,7 +18,7 @@ export function useAuth() {
     updateProfile,
     initialize,
     setUser,
-    setSession,
+    setFirebaseUser,
   } = useAuthStore()
 
   // Initialize auth state on mount
@@ -26,27 +26,27 @@ export function useAuth() {
     initialize()
 
     // Listen to auth state changes
-    const { data: { subscription } } = AuthService.onAuthStateChange(
-      async (event, session) => {
-        if (event === 'SIGNED_IN' && session?.user) {
-          const userProfile = await AuthService.getUserProfile(session.user.id)
+    const unsubscribe = AuthService.onAuthStateChange(
+      async (firebaseUser) => {
+        if (firebaseUser) {
+          const userProfile = await AuthService.getUserProfile(firebaseUser.uid)
           setUser(userProfile)
-          setSession(session)
-        } else if (event === 'SIGNED_OUT') {
+          setFirebaseUser(firebaseUser)
+        } else {
           setUser(null)
-          setSession(null)
+          setFirebaseUser(null)
         }
       }
     )
 
     return () => {
-      subscription.unsubscribe()
+      unsubscribe()
     }
-  }, [initialize, setUser, setSession])
+  }, [initialize, setUser, setFirebaseUser])
 
   return {
     user,
-    session,
+    firebaseUser,
     isLoading,
     isAuthenticated,
     signIn,

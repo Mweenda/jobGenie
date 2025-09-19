@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Search, Bell, User, Settings, LogOut, Briefcase } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
-import Button from '../base/Button'
-import Input from '../base/Input'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
 
 export default function Header() {
   const { user, isAuthenticated, signOut } = useAuth()
@@ -60,10 +60,11 @@ export default function Header() {
             <div className="flex-1 max-w-lg mx-8">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input
-                  placeholder="Search for jobs..."
-                  className="pl-10"
-                />
+                    <Input 
+                      type="text"
+                      placeholder="Search for jobs..." 
+                      className="pl-10"
+                    />
               </div>
             </div>
           )}
@@ -76,6 +77,7 @@ export default function Header() {
                   <button 
                     onClick={() => setShowNotifications(!showNotifications)}
                     className="p-2 text-gray-400 hover:text-gray-600 relative"
+                    aria-label="Notifications"
                   >
                     <Bell className="w-5 h-5" />
                     {unreadCount > 0 && (

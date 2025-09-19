@@ -108,7 +108,7 @@ export class ChatbotService {
   /**
    * Handle job search requests
    */
-  private static async handleJobSearch(userId: string, params: any): Promise<ChatMessage> {
+  private static async handleJobSearch(userId: string, _params: any): Promise<ChatMessage> {
     try {
       const recommendations = await JobService.getRecommendations(userId)
       
@@ -138,7 +138,7 @@ export class ChatbotService {
   /**
    * Handle resume help requests
    */
-  private static async handleResumeHelp(userId: string, params: any): Promise<ChatMessage> {
+  private static async handleResumeHelp(_userId: string, _params: any): Promise<ChatMessage> {
     const resumeTips = [
       "📝 **Keep it concise**: Aim for 1-2 pages maximum",
       "🎯 **Tailor for each job**: Customize your resume for specific positions",
@@ -160,7 +160,7 @@ export class ChatbotService {
   /**
    * Handle interview preparation requests
    */
-  private static async handleInterviewPrep(params: any): Promise<ChatMessage> {
+  private static async handleInterviewPrep(_params: any): Promise<ChatMessage> {
     const interviewTips = [
       "🔍 **Research the company**: Know their mission, values, and recent news",
       "📝 **Practice STAR method**: Structure answers with Situation, Task, Action, Result",
@@ -191,7 +191,7 @@ export class ChatbotService {
   /**
    * Handle salary inquiry requests
    */
-  private static async handleSalaryInquiry(params: any): Promise<ChatMessage> {
+  private static async handleSalaryInquiry(_params: any): Promise<ChatMessage> {
     const salaryTips = [
       "📊 **Research market rates**: Use sites like Glassdoor, PayScale, and LinkedIn Salary",
       "💼 **Consider total compensation**: Include benefits, bonuses, and stock options",
@@ -213,7 +213,7 @@ export class ChatbotService {
   /**
    * Handle career advice requests
    */
-  private static async handleCareerAdvice(userId: string, params: any): Promise<ChatMessage> {
+  private static async handleCareerAdvice(userId: string, _params: any): Promise<ChatMessage> {
     try {
       const user = await AuthService.getUserProfile(userId)
       
@@ -294,25 +294,25 @@ export class ChatbotService {
     return keywords.some(keyword => message.includes(keyword))
   }
 
-  private static extractJobSearchParams(message: string): Record<string, any> {
+  private static extractJobSearchParams(_message: string): Record<string, any> {
     // Extract location, job type, etc. from message
     // This is a simplified implementation
     return {}
   }
 
-  private static extractResumeParams(message: string): Record<string, any> {
+  private static extractResumeParams(_message: string): Record<string, any> {
     return {}
   }
 
-  private static extractInterviewParams(message: string): Record<string, any> {
+  private static extractInterviewParams(_message: string): Record<string, any> {
     return {}
   }
 
-  private static extractSalaryParams(message: string): Record<string, any> {
+  private static extractSalaryParams(_message: string): Record<string, any> {
     return {}
   }
 
-  private static extractCareerParams(message: string): Record<string, any> {
+  private static extractCareerParams(_message: string): Record<string, any> {
     return {}
   }
 
