@@ -73,7 +73,9 @@ export interface JobSearchFilters {
   company?: string
 }
 
-export interface JobSearchParams extends JobSearchFilters {}
+export interface JobSearchParams extends JobSearchFilters {
+  // Additional search parameters can be added here
+}
 
 export interface JobSearchResult {
   jobs: Job[]

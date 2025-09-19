@@ -554,7 +554,7 @@ export class JobMatchingEngineV2 {
   // Helper methods
   private static findMatchingSkill(userSkills: UserSkill[], skillName: string): UserSkill | undefined {
     // Direct match
-    let match = userSkills.find(s => 
+    const match = userSkills.find(s => 
       s.name.toLowerCase() === skillName.toLowerCase()
     )
     

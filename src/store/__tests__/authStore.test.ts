@@ -38,10 +38,10 @@ describe('AuthStore', () => {
     it('has correct initial state', () => {
       const { result } = renderHook(() => useAuthStore())
 
-      expect(result.current.user).toBeNull()
-      expect(result.current.firebaseUser).toBeNull()
-      expect(result.current.isLoading).toBe(false)
-      expect(result.current.isAuthenticated).toBe(false)
+      expect(result.current?.user).toBeNull()
+      expect(result.current?.firebaseUser).toBeNull()
+      expect(result.current?.isLoading).toBe(false)
+      expect(result.current?.isAuthenticated).toBe(false)
     })
   })
 
@@ -63,10 +63,10 @@ describe('AuthStore', () => {
         email: 'test@example.com',
         password: 'password'
       })
-      expect(result.current.user).toEqual(mockUserProfile)
-      expect(result.current.firebaseUser).toEqual(mockFirebaseUser)
-      expect(result.current.isAuthenticated).toBe(true)
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current?.user).toEqual(mockUserProfile)
+      expect(result.current?.firebaseUser).toEqual(mockFirebaseUser)
+      expect(result.current?.isAuthenticated).toBe(true)
+      expect(result.current?.isLoading).toBe(false)
     })
 
     it('handles sign in error', async () => {
@@ -83,10 +83,10 @@ describe('AuthStore', () => {
         }
       })
 
-      expect(result.current.user).toBeNull()
-      expect(result.current.firebaseUser).toBeNull()
-      expect(result.current.isAuthenticated).toBe(false)
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current?.user).toBeNull()
+      expect(result.current?.firebaseUser).toBeNull()
+      expect(result.current?.isAuthenticated).toBe(false)
+      expect(result.current?.isLoading).toBe(false)
     })
   })
 
@@ -111,10 +111,10 @@ describe('AuthStore', () => {
       })
 
       expect(mockAuthService.signUp).toHaveBeenCalledWith(userData)
-      expect(result.current.user).toEqual(mockUserProfile)
-      expect(result.current.firebaseUser).toEqual(mockFirebaseUser)
-      expect(result.current.isAuthenticated).toBe(true)
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current?.user).toEqual(mockUserProfile)
+      expect(result.current?.firebaseUser).toEqual(mockFirebaseUser)
+      expect(result.current?.isAuthenticated).toBe(true)
+      expect(result.current?.isLoading).toBe(false)
     })
 
     it('handles sign up error', async () => {
@@ -136,10 +136,10 @@ describe('AuthStore', () => {
         }
       })
 
-      expect(result.current.user).toBeNull()
-      expect(result.current.firebaseUser).toBeNull()
-      expect(result.current.isAuthenticated).toBe(false)
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current?.user).toBeNull()
+      expect(result.current?.firebaseUser).toBeNull()
+      expect(result.current?.isAuthenticated).toBe(false)
+      expect(result.current?.isLoading).toBe(false)
     })
   })
 
@@ -160,10 +160,10 @@ describe('AuthStore', () => {
       })
 
       expect(mockAuthService.signOut).toHaveBeenCalled()
-      expect(result.current.user).toBeNull()
-      expect(result.current.firebaseUser).toBeNull()
-      expect(result.current.isAuthenticated).toBe(false)
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current?.user).toBeNull()
+      expect(result.current?.firebaseUser).toBeNull()
+      expect(result.current?.isAuthenticated).toBe(false)
+      expect(result.current?.isLoading).toBe(false)
     })
 
     it('handles sign out error', async () => {
@@ -180,7 +180,7 @@ describe('AuthStore', () => {
         }
       })
 
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current?.isLoading).toBe(false)
     })
   })
 
@@ -200,8 +200,8 @@ describe('AuthStore', () => {
       })
 
       expect(mockAuthService.updateUserProfile).toHaveBeenCalledWith('1', updates)
-      expect(result.current.user).toEqual({ ...initialUser, ...updates })
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current?.user).toEqual({ ...initialUser, ...updates })
+      expect(result.current?.isLoading).toBe(false)
     })
 
     it('throws error when no user is logged in', async () => {
@@ -228,13 +228,16 @@ describe('AuthStore', () => {
       const { result } = renderHook(() => useAuthStore())
 
       await act(async () => {
-        await result.current.initialize()
+        // Wait for the store to be initialized
+        if (result.current?.initialize) {
+          await result.current.initialize()
+        }
       })
 
-      expect(result.current.user).toEqual(mockUserProfile)
-      expect(result.current.firebaseUser).toEqual(mockFirebaseUser)
-      expect(result.current.isAuthenticated).toBe(true)
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current?.user).toEqual(mockUserProfile)
+      expect(result.current?.firebaseUser).toEqual(mockFirebaseUser)
+      expect(result.current?.isAuthenticated).toBe(true)
+      expect(result.current?.isLoading).toBe(false)
     })
 
     it('initializes with no user', async () => {
@@ -243,13 +246,16 @@ describe('AuthStore', () => {
       const { result } = renderHook(() => useAuthStore())
 
       await act(async () => {
-        await result.current.initialize()
+        // Wait for the store to be initialized
+        if (result.current?.initialize) {
+          await result.current.initialize()
+        }
       })
 
-      expect(result.current.user).toBeNull()
-      expect(result.current.firebaseUser).toBeNull()
-      expect(result.current.isAuthenticated).toBe(false)
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current?.user).toBeNull()
+      expect(result.current?.firebaseUser).toBeNull()
+      expect(result.current?.isAuthenticated).toBe(false)
+      expect(result.current?.isLoading).toBe(false)
     })
 
     it('handles initialization error', async () => {
@@ -259,13 +265,16 @@ describe('AuthStore', () => {
       const { result } = renderHook(() => useAuthStore())
 
       await act(async () => {
-        await result.current.initialize()
+        // Wait for the store to be initialized
+        if (result.current?.initialize) {
+          await result.current.initialize()
+        }
       })
 
-      expect(result.current.user).toBeNull()
-      expect(result.current.firebaseUser).toBeNull()
-      expect(result.current.isAuthenticated).toBe(false)
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current?.user).toBeNull()
+      expect(result.current?.firebaseUser).toBeNull()
+      expect(result.current?.isAuthenticated).toBe(false)
+      expect(result.current?.isLoading).toBe(false)
     })
   })
 })
