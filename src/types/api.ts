@@ -14,6 +14,20 @@ export interface APIError {
   details?: Record<string, any>
 }
 
+export class APIError extends Error {
+  code: string
+  field?: string
+  details?: Record<string, any>
+
+  constructor(error: { code: string; message: string; field?: string; details?: Record<string, any> }) {
+    super(error.message)
+    this.name = 'APIError'
+    this.code = error.code
+    this.field = error.field
+    this.details = error.details
+  }
+}
+
 export interface ResponseMetadata {
   timestamp: string
   requestId: string

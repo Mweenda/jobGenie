@@ -1,6 +1,8 @@
 // src/services/JobAggregationService.ts
-import axios, { AxiosInstance, AxiosResponse } from 'axios'
-import { Job, JobSearchParams, JobSearchResult, IndeedJobResponse, IndeedJob, JobLocation, SalaryRange } from '../types/job'
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios'
+import { Job, JobSearchParams, JobSearchResult, IndeedJobResponse, IndeedJob } from '../types/job'
+import { v4 as uuidv4 } from 'uuid'
+import { sanitizeHtml, decodeHtmlEntities } from '../utils/sanitizers'
 
 interface ProviderConfig {
   baseUrl: string
