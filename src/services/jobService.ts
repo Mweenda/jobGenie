@@ -1,4 +1,16 @@
-import { supabase } from '../lib/supabase'
+import { db } from '../lib/firebase'
+import { 
+  collection, 
+  doc, 
+  getDocs, 
+  getDoc, 
+  addDoc, 
+  deleteDoc, 
+  query, 
+  where, 
+  orderBy, 
+  limit as firestoreLimit
+} from 'firebase/firestore'
 
 export interface Job {
   id: string
@@ -10,303 +22,143 @@ export interface Job {
   salaryMin: number | null
   salaryMax: number | null
   isRemote: boolean
-  status: string
+  experienceLevel: string | null
   postedAt: string
-  expiresAt: string | null
-  company: {
-    id: string
-    name: string
-    logoUrl: string | null
-    industry: string | null
-    website: string | null
-  }
-  matchScore?: number
+  company: Company
+  skills: string[]
+  benefits: string[]
+  applicationDeadline?: string
+  applicationUrl?: string
+  contactEmail?: string
 }
 
-export interface JobSearchParams {
+export interface Company {
+    id: string
+    name: string
+  logo?: string
+  website?: string
+  description?: string
+  industry?: string
+  size?: string
+  location?: string
+}
+
+export interface JobApplication {
+  id: string
+  jobId: string
+  userId: string
+  status: 'pending' | 'reviewed' | 'interview' | 'rejected' | 'accepted'
+  appliedAt: string
+  coverLetter?: string
+  resumeUrl?: string
+  notes?: string
+}
+
+export interface SavedJob {
+  id: string
+  jobId: string
+  userId: string
+  savedAt: string
+}
+
+export interface JobSearchFilters {
   query?: string
   location?: string
   jobType?: string
+  experienceLevel?: string
   salaryMin?: number
   salaryMax?: number
-  remote?: boolean
+  isRemote?: boolean
   skills?: string[]
-  page?: number
-  limit?: number
+  company?: string
 }
+
+export interface JobSearchParams extends JobSearchFilters {}
 
 export interface JobSearchResult {
   jobs: Job[]
-  pagination: {
-    page: number
-    limit: number
-    total: number
-    totalPages: number
-  }
+  totalCount: number
+  hasMore: boolean
 }
 
 /**
- * Job service for managing job listings, search, and recommendations
+ * Job service using Firebase Firestore
+ * Handles job listings, applications, and saved jobs
  */
 export class JobService {
   /**
-   * Search for jobs with filters
+   * Get all jobs with optional filters
    */
-  static async searchJobs(params: JobSearchParams): Promise<JobSearchResult> {
+  static async getJobs(filters: JobSearchFilters = {}, limit = 20): Promise<Job[]> {
     try {
-      const page = params.page || 1
-      const limit = params.limit || 10
-      const offset = (page - 1) * limit
-
-      let query = supabase
-        .from('jobs')
-        .select(`
-          *,
-          companies!inner (
-            id,
-            name,
-            logo_url,
-            industry,
-            website
-          )
-        `, { count: 'exact' })
-        .eq('status', 'active')
-        .order('posted_at', { ascending: false })
-        .range(offset, offset + limit - 1)
+      const jobsRef = collection(db, 'jobs')
+      let jobQuery = query(jobsRef, orderBy('postedAt', 'desc'), firestoreLimit(limit))
 
       // Apply filters
-      if (params.query) {
-        query = query.or(
-          `title.ilike.%${params.query}%,description.ilike.%${params.query}%`
-        )
+      if (filters.jobType) {
+        jobQuery = query(jobQuery, where('jobType', '==', filters.jobType))
+      }
+      if (filters.isRemote !== undefined) {
+        jobQuery = query(jobQuery, where('isRemote', '==', filters.isRemote))
+      }
+      if (filters.experienceLevel) {
+        jobQuery = query(jobQuery, where('experienceLevel', '==', filters.experienceLevel))
       }
 
-      if (params.location) {
-        query = query.ilike('location', `%${params.location}%`)
-      }
+      const querySnapshot = await getDocs(jobQuery)
+      const jobs: Job[] = []
 
-      if (params.jobType) {
-        query = query.eq('job_type', params.jobType)
-      }
-
-      if (params.salaryMin) {
-        query = query.gte('salary_min', params.salaryMin)
-      }
-
-      if (params.salaryMax) {
-        query = query.lte('salary_max', params.salaryMax)
-      }
-
-      if (params.remote) {
-        query = query.eq('is_remote', true)
-      }
-
-      const { data, error, count } = await query
-
-      if (error) throw error
-
-      const jobs: Job[] = (data || []).map(job => ({
-        id: job.id,
-        title: job.title,
-        description: job.description,
-        requirements: job.requirements,
-        location: job.location,
-        jobType: job.job_type,
-        salaryMin: job.salary_min,
-        salaryMax: job.salary_max,
-        isRemote: job.is_remote,
-        status: job.status,
-        postedAt: job.posted_at,
-        expiresAt: job.expires_at,
-        company: {
-          id: job.companies.id,
-          name: job.companies.name,
-          logoUrl: job.companies.logo_url,
-          industry: job.companies.industry,
-          website: job.companies.website,
-        }
-      }))
-
-      return {
-        jobs,
-        pagination: {
-          page,
-          limit,
-          total: count || 0,
-          totalPages: Math.ceil((count || 0) / limit)
-        }
-      }
-    } catch (error) {
-      console.error('Search jobs error:', error)
-      throw error
-    }
-  }
-
-  /**
-   * Get job by ID
-   */
-  static async getJobById(jobId: string): Promise<Job | null> {
-    try {
-      const { data, error } = await supabase
-        .from('jobs')
-        .select(`
-          *,
-          companies (
-            id,
-            name,
-            logo_url,
-            industry,
-            website,
-            description
-          )
-        `)
-        .eq('id', jobId)
-        .single()
-
-      if (error) throw error
-
-      return {
-        id: data.id,
-        title: data.title,
-        description: data.description,
-        requirements: data.requirements,
-        location: data.location,
-        jobType: data.job_type,
-        salaryMin: data.salary_min,
-        salaryMax: data.salary_max,
-        isRemote: data.is_remote,
-        status: data.status,
-        postedAt: data.posted_at,
-        expiresAt: data.expires_at,
-        company: {
-          id: data.companies.id,
-          name: data.companies.name,
-          logoUrl: data.companies.logo_url,
-          industry: data.companies.industry,
-          website: data.companies.website,
-        }
-      }
-    } catch (error) {
-      console.error('Get job by ID error:', error)
-      return null
-    }
-  }
-
-  /**
-   * Get AI-powered job recommendations for a user
-   */
-  static async getRecommendations(userId: string): Promise<Job[]> {
-    try {
-      // Get user profile and skills
-      const { data: user } = await supabase
-        .from('users')
-        .select(`
-          *,
-          user_skills (skill_name, proficiency_level)
-        `)
-        .eq('id', userId)
-        .single()
-
-      if (!user) return []
-
-      // Get all active jobs
-      const { data: jobs } = await supabase
-        .from('jobs')
-        .select(`
-          *,
-          companies (
-            id,
-            name,
-            logo_url,
-            industry,
-            website
-          )
-        `)
-        .eq('status', 'active')
-        .order('posted_at', { ascending: false })
-        .limit(50)
-
-      if (!jobs) return []
-
-      // Calculate match scores based on user skills and job requirements
-      const userSkills = (user.user_skills || []).map((s: any) => s.skill_name.toLowerCase())
-      
-      const scoredJobs = jobs.map(job => {
-        const jobRequirements = (job.requirements || []).map((r: string) => r.toLowerCase())
-        const skillMatches = userSkills.filter(skill =>
-          jobRequirements.some(req => req.includes(skill))
-        ).length
-
-        const matchScore = skillMatches / Math.max(jobRequirements.length, 1)
-
-        return {
-          id: job.id,
-          title: job.title,
-          description: job.description,
-          requirements: job.requirements,
-          location: job.location,
-          jobType: job.job_type,
-          salaryMin: job.salary_min,
-          salaryMax: job.salary_max,
-          isRemote: job.is_remote,
-          status: job.status,
-          postedAt: job.posted_at,
-          expiresAt: job.expires_at,
-          company: {
-            id: job.companies.id,
-            name: job.companies.name,
-            logoUrl: job.companies.logo_url,
-            industry: job.companies.industry,
-            website: job.companies.website,
-          },
-          matchScore
-        }
+      querySnapshot.forEach((doc) => {
+        jobs.push({ id: doc.id, ...doc.data() } as Job)
       })
 
-      // Sort by match score and return top 10
-      return scoredJobs
-        .sort((a, b) => b.matchScore - a.matchScore)
-        .slice(0, 10)
+      return jobs
     } catch (error) {
-      console.error('Get recommendations error:', error)
+      console.error('Error fetching jobs:', error)
       return []
     }
   }
 
   /**
-   * Save a job for later
+   * Get a specific job by ID
    */
-  static async saveJob(userId: string, jobId: string) {
+  static async getJobById(jobId: string): Promise<Job | null> {
     try {
-      const { error } = await supabase
-        .from('saved_jobs')
-        .insert({
-          user_id: userId,
-          job_id: jobId
-        })
+      const jobDoc = await getDoc(doc(db, 'jobs', jobId))
+      
+      if (!jobDoc.exists()) {
+        return null
+      }
 
-      if (error) throw error
+      return { id: jobDoc.id, ...jobDoc.data() } as Job
     } catch (error) {
-      console.error('Save job error:', error)
-      throw error
+      console.error('Error fetching job:', error)
+      return null
     }
   }
 
   /**
-   * Remove a saved job
+   * Search jobs by query
    */
-  static async unsaveJob(userId: string, jobId: string) {
+  static async searchJobs(searchQuery: string, filters: JobSearchFilters = {}): Promise<Job[]> {
     try {
-      const { error } = await supabase
-        .from('saved_jobs')
-        .delete()
-        .eq('user_id', userId)
-        .eq('job_id', jobId)
+      // For now, return all jobs and filter client-side
+      // In production, you'd want to use Algolia or similar for full-text search
+      const jobs = await this.getJobs(filters, 100)
+      
+      if (!searchQuery) return jobs
 
-      if (error) throw error
+      const query = searchQuery.toLowerCase()
+      return jobs.filter((job: Job) => 
+        job.title.toLowerCase().includes(query) ||
+        job.description?.toLowerCase().includes(query) ||
+        job.company.name.toLowerCase().includes(query) ||
+        job.location?.toLowerCase().includes(query) ||
+        job.skills.some((skill: string) => skill.toLowerCase().includes(query))
+      )
     } catch (error) {
-      console.error('Unsave job error:', error)
-      throw error
+      console.error('Error searching jobs:', error)
+      return []
     }
   }
 
@@ -315,69 +167,107 @@ export class JobService {
    */
   static async getSavedJobs(userId: string): Promise<Job[]> {
     try {
-      const { data, error } = await supabase
-        .from('saved_jobs')
-        .select(`
-          jobs (
-            *,
-            companies (
-              id,
-              name,
-              logo_url,
-              industry,
-              website
-            )
-          )
-        `)
-        .eq('user_id', userId)
-        .order('saved_at', { ascending: false })
+      const savedJobsRef = collection(db, 'saved_jobs')
+      const savedJobsQuery = query(
+        savedJobsRef, 
+        where('userId', '==', userId),
+        orderBy('savedAt', 'desc')
+      )
+      
+      const savedJobsSnapshot = await getDocs(savedJobsQuery)
+      const jobIds: string[] = []
+      
+      savedJobsSnapshot.forEach((doc) => {
+        jobIds.push(doc.data().jobId)
+      })
 
-      if (error) throw error
+      // Fetch the actual job details
+      const jobs: Job[] = []
+      for (const jobId of jobIds) {
+        const job = await this.getJobById(jobId)
+        if (job) jobs.push(job)
+      }
 
-      return (data || []).map((item: any) => ({
-        id: item.jobs.id,
-        title: item.jobs.title,
-        description: item.jobs.description,
-        requirements: item.jobs.requirements,
-        location: item.jobs.location,
-        jobType: item.jobs.job_type,
-        salaryMin: item.jobs.salary_min,
-        salaryMax: item.jobs.salary_max,
-        isRemote: item.jobs.is_remote,
-        status: item.jobs.status,
-        postedAt: item.jobs.posted_at,
-        expiresAt: item.jobs.expires_at,
-        company: {
-          id: item.jobs.companies.id,
-          name: item.jobs.companies.name,
-          logoUrl: item.jobs.companies.logo_url,
-          industry: item.jobs.companies.industry,
-          website: item.jobs.companies.website,
-        }
-      }))
+      return jobs
     } catch (error) {
-      console.error('Get saved jobs error:', error)
+      console.error('Error fetching saved jobs:', error)
       return []
+    }
+  }
+
+  /**
+   * Save a job for a user
+   */
+  static async saveJob(userId: string, jobId: string): Promise<void> {
+    try {
+      const savedJobsRef = collection(db, 'saved_jobs')
+      
+      // Check if already saved
+      const existingQuery = query(
+        savedJobsRef,
+        where('userId', '==', userId),
+        where('jobId', '==', jobId)
+      )
+      const existingSnapshot = await getDocs(existingQuery)
+      
+      if (!existingSnapshot.empty) {
+        throw new Error('Job already saved')
+      }
+
+      await addDoc(savedJobsRef, {
+        userId,
+        jobId,
+        savedAt: new Date().toISOString()
+      })
+    } catch (error) {
+      console.error('Error saving job:', error)
+      throw error
+    }
+  }
+
+  /**
+   * Remove a saved job
+   */
+  static async unsaveJob(userId: string, jobId: string): Promise<void> {
+    try {
+      const savedJobsRef = collection(db, 'saved_jobs')
+      const savedJobQuery = query(
+        savedJobsRef,
+        where('userId', '==', userId),
+        where('jobId', '==', jobId)
+      )
+      
+      const savedJobSnapshot = await getDocs(savedJobQuery)
+      
+      savedJobSnapshot.forEach(async (docSnapshot) => {
+        await deleteDoc(doc(db, 'saved_jobs', docSnapshot.id))
+      })
+    } catch (error) {
+      console.error('Error removing saved job:', error)
+      throw error
     }
   }
 
   /**
    * Apply to a job
    */
-  static async applyToJob(userId: string, jobId: string, coverLetter?: string) {
+  static async applyToJob(
+    userId: string, 
+    jobId: string, 
+    applicationData: Partial<JobApplication>
+  ): Promise<void> {
     try {
-      const { error } = await supabase
-        .from('applications')
-        .insert({
-          user_id: userId,
-          job_id: jobId,
-          cover_letter: coverLetter,
-          status: 'pending'
-        })
-
-      if (error) throw error
+      const applicationsRef = collection(db, 'applications')
+      
+      await addDoc(applicationsRef, {
+        userId,
+        jobId,
+        status: 'pending',
+        appliedAt: new Date().toISOString(),
+        ...applicationData
+      })
     } catch (error) {
-      console.error('Apply to job error:', error)
+      console.error('Error applying to job:', error)
       throw error
     }
   }
@@ -385,30 +275,48 @@ export class JobService {
   /**
    * Get user's job applications
    */
-  static async getUserApplications(userId: string) {
+  static async getUserApplications(userId: string): Promise<JobApplication[]> {
     try {
-      const { data, error } = await supabase
-        .from('applications')
-        .select(`
-          *,
-          jobs (
-            *,
-            companies (
-              id,
-              name,
-              logo_url,
-              industry
-            )
-          )
-        `)
-        .eq('user_id', userId)
-        .order('applied_at', { ascending: false })
+      const applicationsRef = collection(db, 'applications')
+      const applicationsQuery = query(
+        applicationsRef,
+        where('userId', '==', userId),
+        orderBy('appliedAt', 'desc')
+      )
+      
+      const applicationsSnapshot = await getDocs(applicationsQuery)
+      const applications: JobApplication[] = []
+      
+      applicationsSnapshot.forEach((doc) => {
+        applications.push({ id: doc.id, ...doc.data() } as JobApplication)
+      })
 
-      if (error) throw error
-      return data || []
+      return applications
     } catch (error) {
-      console.error('Get user applications error:', error)
+      console.error('Error fetching applications:', error)
       return []
     }
+  }
+
+  /**
+   * Get job recommendations for user (simplified)
+   */
+  static async getJobRecommendations(_userId: string, limit = 10): Promise<Job[]> {
+    try {
+      // For now, just return recent jobs
+      // In production, you'd implement ML-based recommendations
+      const jobs = await this.getJobs({}, limit)
+      return jobs
+    } catch (error) {
+      console.error('Error fetching recommendations:', error)
+      return []
+    }
+  }
+
+  /**
+   * Alias for getJobRecommendations for backward compatibility
+   */
+  static async getRecommendations(userId: string, limit = 10): Promise<Job[]> {
+    return this.getJobRecommendations(userId, limit)
   }
 }

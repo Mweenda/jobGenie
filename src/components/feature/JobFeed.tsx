@@ -21,7 +21,7 @@ export default function JobFeed() {
     jobs, 
     recommendations, 
     savedJobs, 
-    searchResults, 
+    // searchResults, 
     isLoading, 
     searchJobs, 
     getRecommendations, 
@@ -116,13 +116,13 @@ export default function JobFeed() {
           await getRecommendations(user.id)
           break
         case 'recent':
-          await searchJobs({ page: 1, limit: 10 })
+          await searchJobs({})
           break
         case 'remote':
-          await searchJobs({ remote: true, page: 1, limit: 10 })
+          await searchJobs({ isRemote: true })
           break
         case 'full-time':
-          await searchJobs({ jobType: 'full-time', page: 1, limit: 10 })
+          await searchJobs({ jobType: 'full-time' })
           break
         case 'saved':
           await getSavedJobs(user.id)
@@ -311,16 +311,16 @@ export default function JobFeed() {
             <div key={job.id} className="bg-white rounded-lg border p-6 hover:shadow-md transition-all duration-200 hover:border-blue-200">
               <div className="flex justify-between items-start">
                 <div className="flex space-x-4 flex-1">
-                  <div className="text-3xl">{job.company.logoUrl}</div>
+                  <div className="text-3xl">{(job.company as any).logo || (job.company as any).logoUrl || '🏢'}</div>
                   <div className="flex-1">
                     <div className="flex items-center space-x-2">
                       <h3 className="text-lg font-semibold text-gray-900">{job.title}</h3>
-                      {activeTab === 'recommended' && job.matchScore && (
+                      {/* {activeTab === 'recommended' && job.matchScore && (
                         <div className="flex items-center bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
                           <Star className="w-3 h-3 mr-1" />
                           {Math.round(job.matchScore * 100)}% match
                         </div>
-                      )}
+                      )} */}
                     </div>
                     <p className="text-gray-600">{job.company.name}</p>
                     
@@ -340,7 +340,7 @@ export default function JobFeed() {
                     </div>
                     
                     <p className="mt-3 text-gray-600 text-sm">
-                      {truncateText(job.description, 150)}
+                      {truncateText(job.description || '', 150)}
                     </p>
 
                     {job.requirements && (
