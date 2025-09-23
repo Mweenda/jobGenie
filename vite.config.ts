@@ -16,8 +16,9 @@ export default defineConfig({
       port: 5173,
     }
   },
-  // Fix PWA plugin issues
+  // Fix PWA plugin issues and define global variables
   define: {
-    __VITE_PWA__: false
+    __VITE_PWA__: false,
+    global: 'globalThis',
   }
 })
