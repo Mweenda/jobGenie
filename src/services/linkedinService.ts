@@ -13,7 +13,7 @@ import {
 } from 'firebase/auth'
 
 // LinkedIn OAuth Configuration
-const LINKEDIN_CLIENT_ID = import.meta.env.VITE_LINKEDIN_CLIENT_ID
+const LINKEDIN_CLIENT_ID = import.meta.env.VITE_LINKEDIN_CLIENT_ID || 'demo-linkedin-client-id'
 const LINKEDIN_REDIRECT_URI = import.meta.env.VITE_LINKEDIN_REDIRECT_URI || `${window.location.origin}/auth/callback`
 
 // LinkedIn API Scopes for profile import
