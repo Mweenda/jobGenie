@@ -391,6 +391,204 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* About Section */}
+      <section id="about" className="py-20 px-6 bg-white/50 dark:bg-gray-900/50">
+        <div className="container mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-6"
+            >
+              <h2 className="text-display-lg">
+                About{' '}
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  JobGenie
+                </span>
+              </h2>
+              <div className="space-y-4 text-body-lg text-muted-foreground">
+                <p>
+                  JobGenie is revolutionizing the way professionals find their dream careers. Founded by a team of 
+                  AI experts and career specialists, we understand the challenges of modern job searching.
+                </p>
+                <p>
+                  Our mission is to eliminate the frustration of endless applications and mismatched opportunities. 
+                  Using cutting-edge artificial intelligence, we analyze your skills, experience, and career goals 
+                  to connect you with positions where you'll truly thrive.
+                </p>
+                <p>
+                  Join thousands of professionals who have already transformed their careers with JobGenie's 
+                  intelligent matching system.
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-6 pt-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600">2023</div>
+                  <div className="text-sm text-muted-foreground">Founded</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600">50K+</div>
+                  <div className="text-sm text-muted-foreground">Success Stories</div>
+                </div>
+              </div>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <GlassCard variant="floating" className="p-6">
+                <div className="w-full h-64 rounded-lg overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                    alt="Team collaboration and innovation"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </GlassCard>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-20 px-6">
+        <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-display-lg mb-4">
+              Get in{' '}
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Touch
+              </span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            </p>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-2 gap-12">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="space-y-8"
+            >
+              <GlassCard variant="prominent" className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 rounded-full bg-blue-500/10">
+                    <Briefcase className="w-6 h-6 text-blue-500" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">For Job Seekers</h3>
+                    <p className="text-muted-foreground text-sm">
+                      Questions about our AI matching process or need help with your profile? 
+                      We're here to help you succeed.
+                    </p>
+                    <p className="text-sm mt-2 text-blue-600">support@jobgenie.com</p>
+                  </div>
+                </div>
+              </GlassCard>
+
+              <GlassCard variant="prominent" className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 rounded-full bg-purple-500/10">
+                    <Users className="w-6 h-6 text-purple-500" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">For Employers</h3>
+                    <p className="text-muted-foreground text-sm">
+                      Interested in partnering with JobGenie to find top talent? 
+                      Let's discuss how we can help you hire better.
+                    </p>
+                    <p className="text-sm mt-2 text-purple-600">partners@jobgenie.com</p>
+                  </div>
+                </div>
+              </GlassCard>
+
+              <GlassCard variant="prominent" className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 rounded-full bg-green-500/10">
+                    <CheckCircle className="w-6 h-6 text-green-500" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">General Inquiries</h3>
+                    <p className="text-muted-foreground text-sm">
+                      Press, partnerships, or general questions about JobGenie? 
+                      We'd love to connect with you.
+                    </p>
+                    <p className="text-sm mt-2 text-green-600">hello@jobgenie.com</p>
+                  </div>
+                </div>
+              </GlassCard>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <GlassCard variant="floating" className="p-8">
+                <h3 className="text-xl font-semibold mb-6">Send us a Message</h3>
+                <form className="space-y-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">First Name</label>
+                      <input 
+                        type="text" 
+                        className="w-full px-4 py-3 rounded-lg glass-subtle border-0 focus:ring-2 focus:ring-blue-500 transition-all"
+                        placeholder="John"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Last Name</label>
+                      <input 
+                        type="text" 
+                        className="w-full px-4 py-3 rounded-lg glass-subtle border-0 focus:ring-2 focus:ring-blue-500 transition-all"
+                        placeholder="Doe"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Email</label>
+                    <input 
+                      type="email" 
+                      className="w-full px-4 py-3 rounded-lg glass-subtle border-0 focus:ring-2 focus:ring-blue-500 transition-all"
+                      placeholder="john@example.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Subject</label>
+                    <input 
+                      type="text" 
+                      className="w-full px-4 py-3 rounded-lg glass-subtle border-0 focus:ring-2 focus:ring-blue-500 transition-all"
+                      placeholder="How can we help?"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Message</label>
+                    <textarea 
+                      rows={4}
+                      className="w-full px-4 py-3 rounded-lg glass-subtle border-0 focus:ring-2 focus:ring-blue-500 transition-all resize-none"
+                      placeholder="Tell us more about your inquiry..."
+                    />
+                  </div>
+                  <FloatingButton variant="primary" className="w-full">
+                    Send Message
+                  </FloatingButton>
+                </form>
+              </GlassCard>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 px-6">
         <div className="container mx-auto">
