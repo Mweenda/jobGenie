@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+// import type { Meta, StoryObj } from '@storybook/react'
 import { Mail, Lock, Search, User } from 'lucide-react'
 import Input from './Input'
 
@@ -29,10 +29,11 @@ const meta = {
       description: 'Marks the input as required',
     },
   },
-} satisfies Meta<typeof Input>
+} // satisfies Meta<typeof Input>
 
 export default meta
-type Story = StoryObj<typeof meta>
+// type Story = StoryObj<typeof meta>
+type Story = any
 
 export const Default: Story = {
   args: {

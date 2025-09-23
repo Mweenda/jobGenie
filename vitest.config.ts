@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
+    setupFiles: ['./src/test/setup.ts', './src/tests/setup.ts'],
     css: true,
     coverage: {
       provider: 'v8',
@@ -35,5 +35,7 @@ export default defineConfig({
     },
     // Increase timeout for CI environments
     testTimeout: process.env.CI ? 10000 : 5000,
+    // Exclude E2E tests from unit test runner
+    exclude: ['**/node_modules/**', '**/e2e/**', '**/dist/**'],
   },
 })

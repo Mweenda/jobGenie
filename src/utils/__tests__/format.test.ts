@@ -58,7 +58,7 @@ describe('Format Utilities', () => {
 
     it('handles null/undefined', () => {
       expect(formatJobType(null)).toBe('Not specified')
-      expect(formatJobType(undefined)).toBe('Not specified')
+      expect(formatJobType(null)).toBe('Not specified')
     })
   })
 

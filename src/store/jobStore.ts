@@ -37,10 +37,15 @@ export const useJobStore = create<JobState>((set, get) => ({
   searchJobs: async (params: JobSearchParams) => {
     set({ isLoading: true, error: null })
     try {
-      const results = await JobService.searchJobs(params)
+      const jobs = await JobService.searchJobs(params.query || '', params)
+      const results: JobSearchResult = {
+        jobs,
+        totalCount: jobs.length,
+        hasMore: false
+      }
       set({
         searchResults: results,
-        jobs: results.jobs,
+        jobs: jobs,
         isLoading: false
       })
     } catch (error) {
@@ -128,7 +133,7 @@ export const useJobStore = create<JobState>((set, get) => ({
 
   applyToJob: async (userId: string, jobId: string, coverLetter?: string) => {
     try {
-      await JobService.applyToJob(userId, jobId, coverLetter)
+      await JobService.applyToJob(userId, jobId, { coverLetter })
       // You might want to update the job status or show a success message
     } catch (error) {
       set({

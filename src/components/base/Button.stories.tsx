@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { fn } from '@storybook/test'
+// import type { Meta, StoryObj } from '@storybook/react'
+// import { action } from '@storybook/addon-actions'
 import { Mail, Download, ArrowRight } from 'lucide-react'
 import Button from './Button'
 
@@ -35,11 +35,12 @@ const meta = {
       description: 'Disables the button',
     },
   },
-  args: { onClick: fn() },
-} satisfies Meta<typeof Button>
+  args: { onClick: () => {} },
+} // satisfies Meta<typeof Button>
 
 export default meta
-type Story = StoryObj<typeof meta>
+// type Story = StoryObj<typeof meta>
+type Story = any
 
 export const Primary: Story = {
   args: {

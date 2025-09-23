@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
-import { User, Mail, Briefcase, MapPin, Edit3, Save, X, Plus } from 'lucide-react'
+import { User, Mail, Edit3, Save, X, Plus } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
-import { useJobStore } from '../../store/jobStore'
+// import { useJobStore } from '../../store/jobStore'
 import Button from '../../components/base/Button'
 import Input from '../../components/base/Input'
 import Header from '../../components/feature/Header'
-import { formatApplicationStatus, formatJobPostedDate, formatSalary } from '../../utils/format'
+import { formatApplicationStatus, formatSalary } from '../../utils/format'
+import { formatJobPostedDate } from '../../utils/date'
 
 interface UserSkill {
   id: string
@@ -15,7 +16,7 @@ interface UserSkill {
 
 export default function ProfilePage() {
   const { user, updateProfile, isLoading } = useAuth()
-  const { getSavedJobs, getUserApplications } = useJobStore()
+  // const { getSavedJobs } = useJobStore()
   
   const [isEditing, setIsEditing] = useState(false)
   const [savedJobs, setSavedJobs] = useState<any[]>([])
