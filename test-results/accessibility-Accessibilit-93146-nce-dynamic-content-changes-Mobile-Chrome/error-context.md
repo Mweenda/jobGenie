@@ -1,0 +1,46 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]: "[plugin:vite:css]"
+    - generic [ref=e6]: "[postcss] /home/t043r/Personal-Projects/jobGenie/src/index.css:1:1: The `border-border` class does not exist. If `border-border` is a custom class, make sure it is defined within a `@layer` directive."
+  - generic [ref=e8] [cursor=pointer]: /home/t043r/Personal-Projects/jobGenie/src/index.css:1:0
+  - generic [ref=e9]: 1 | @tailwind base; | ^ 2 | @tailwind components; 3 | @tailwind utilities;
+  - generic [ref=e10]:
+    - text: at Input.error (
+    - generic [ref=e11] [cursor=pointer]: /home/t043r/Personal-Projects/jobGenie/node_modules/.pnpm/postcss@8.5.6/node_modules/postcss/lib/input.js:135:16
+    - text: ) at AtRule.error (
+    - generic [ref=e12] [cursor=pointer]: /home/t043r/Personal-Projects/jobGenie/node_modules/.pnpm/postcss@8.5.6/node_modules/postcss/lib/node.js:146:32
+    - text: ) at processApply (
+    - generic [ref=e13] [cursor=pointer]: /home/t043r/Personal-Projects/jobGenie/node_modules/.pnpm/tailwindcss@3.4.17/node_modules/tailwindcss/lib/lib/expandApplyAtRules.js:380:29
+    - text: ) at
+    - generic [ref=e14] [cursor=pointer]: /home/t043r/Personal-Projects/jobGenie/node_modules/.pnpm/tailwindcss@3.4.17/node_modules/tailwindcss/lib/lib/expandApplyAtRules.js:551:9
+    - text: at
+    - generic [ref=e15] [cursor=pointer]: /home/t043r/Personal-Projects/jobGenie/node_modules/.pnpm/tailwindcss@3.4.17/node_modules/tailwindcss/lib/processTailwindFeatures.js:55:50
+    - text: at async plugins (
+    - generic [ref=e16] [cursor=pointer]: /home/t043r/Personal-Projects/jobGenie/node_modules/.pnpm/tailwindcss@3.4.17/node_modules/tailwindcss/lib/plugin.js:38:17
+    - text: ) at async LazyResult.runAsync (
+    - generic [ref=e17] [cursor=pointer]: /home/t043r/Personal-Projects/jobGenie/node_modules/.pnpm/postcss@8.5.6/node_modules/postcss/lib/lazy-result.js:293:11
+    - text: ") at async compileCSS (file:"
+    - generic [ref=e18] [cursor=pointer]: ///home/t043r/Personal-Projects/jobGenie/node_modules/.pnpm/vite@5.4.20_@types+node@24.5.2/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:36898:21
+    - text: ") at async TransformPluginContext.transform (file:"
+    - generic [ref=e19] [cursor=pointer]: ///home/t043r/Personal-Projects/jobGenie/node_modules/.pnpm/vite@5.4.20_@types+node@24.5.2/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:36171:11
+    - text: ") at async PluginContainer.transform (file:"
+    - generic [ref=e20] [cursor=pointer]: ///home/t043r/Personal-Projects/jobGenie/node_modules/.pnpm/vite@5.4.20_@types+node@24.5.2/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:49099:18
+    - text: ") at async loadAndTransform (file:"
+    - generic [ref=e21] [cursor=pointer]: ///home/t043r/Personal-Projects/jobGenie/node_modules/.pnpm/vite@5.4.20_@types+node@24.5.2/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:51977:27
+    - text: ") at async viteTransformMiddleware (file:"
+    - generic [ref=e22] [cursor=pointer]: ///home/t043r/Personal-Projects/jobGenie/node_modules/.pnpm/vite@5.4.20_@types+node@24.5.2/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:62105:24
+  - generic [ref=e23]:
+    - text: Click outside, press
+    - generic [ref=e24]: Esc
+    - text: key, or fix the code to dismiss.
+    - text: You can also disable this overlay by setting
+    - code [ref=e25]: server.hmr.overlay
+    - text: to
+    - code [ref=e26]: "false"
+    - text: in
+    - code [ref=e27]: vite.config.ts
+    - text: .
+```

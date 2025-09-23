@@ -1,0 +1,67 @@
+name: CI Pipeline - JobGenie
+
+on:
+  push:
+    branches: [ dev, staging, main ]
+  pull_request:
+    branches: [ dev, staging ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+          
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
+        
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: 🔨 Build (TypeScript compilation)
+        run: pnpm run build
+        
+      - name: 🧹 Lint
+        run: pnpm run lint
+        
+      - name: 🔍 TypeCheck (Strict)
+        run: pnpm run typecheck
+        
+      - name: 🧪 Unit & Integration Tests
+        run: pnpm test -- --runInBand --coverage
+        env:
+          NODE_ENV: test
+          
+      - name: 📊 Upload coverage reports
+        if: success()
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          fail_ci_if_error: false
+          
+      - name: 🚀 Build production bundle
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
+        run: pnpm run build:prod
+        env:
+          NODE_ENV: production
+          
+      - name: 📝 Generate build summary
+        if: success()
+        run: |
+          echo "✅ All quality gates passed!" >> $GITHUB_STEP_SUMMARY
+          echo "- Build: ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- Lint: ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- TypeCheck: ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- Tests: ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- TypeScript Errors: 0" >> $GITHUB_STEP_SUMMARY
