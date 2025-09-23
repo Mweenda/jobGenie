@@ -33,7 +33,7 @@ export class RecruiterAIService {
   private pinecone: Pinecone
   private vectorIndex: any
   private config: RecruiterAIConfig
-  private requestQueue: Array<{ resolve: Function; reject: Function; timestamp: number }> = []
+  // private requestQueue: Array<{ resolve: (value: any) => void; reject: (reason: any) => void; timestamp: number }> = [] // Unused for now
   private lastRequestTime = 0
 
   constructor(config: RecruiterAIConfig) {
@@ -585,8 +585,8 @@ export class RecruiterAIService {
 
   private generateMatchReasoning(
     components: MatchComponents,
-    candidate: CandidateProfile,
-    query: string
+    _candidate: CandidateProfile,
+    _query: string
   ): string[] {
     const reasoning: string[] = []
 

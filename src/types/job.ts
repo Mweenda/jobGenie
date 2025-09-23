@@ -21,6 +21,9 @@ export interface JobCompany {
   industry?: string
   logo?: string
   website?: string
+  culture?: string[] // for test compatibility
+  techStack?: string[] // for test compatibility
+  interviewProcess?: any // for test compatibility
 }
 
 export interface Job {

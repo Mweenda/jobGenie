@@ -1,8 +1,6 @@
 // src/services/JobAggregationService.ts
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios'
-import { Job, JobSearchParams, JobSearchResult, IndeedJobResponse, IndeedJob } from '../types/job'
-import { v4 as uuidv4 } from 'uuid'
-import { sanitizeHtml, decodeHtmlEntities } from '../utils/sanitizers'
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import { Job, JobSearchParams, JobSearchResult, IndeedJobResponse, IndeedJob, JobLocation, SalaryRange } from '../types/job'
 
 interface ProviderConfig {
   baseUrl: string
@@ -57,11 +55,11 @@ export class JobAggregationService {
     averageResponseTime: 0,
     cacheHitRate: 0
   }
-  private rateLimitQueue: Array<{ resolve: Function; reject: Function; timestamp: number }> = []
+  // private _rateLimitQueue: Array<{ resolve: (value: any) => void; reject: (reason: any) => void; timestamp: number }> = [] // Unused for now
   private lastRequestTime = 0
   private requestInterval: number
 
-  constructor(private options: ServiceOptions) {
+  constructor(options: ServiceOptions) {
     this.indeedClient = axios.create({
       baseURL: options.providers.indeed.baseUrl,
       timeout: 5000,

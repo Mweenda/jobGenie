@@ -1,4 +1,50 @@
 // src/types/payment.ts
+
+// Basic payment types
+export interface PaymentMethod {
+  id: string
+  type: 'card' | 'bank_account'
+  last4: string
+  brand?: string
+  expiryMonth?: number
+  expiryYear?: number
+}
+
+export interface Invoice {
+  id: string
+  amount: number
+  currency: string
+  status: 'paid' | 'open' | 'void' | 'uncollectible'
+  created: number
+  dueDate?: number
+  paidAt?: string
+  items?: any[]
+  downloadUrl?: string
+}
+
+export interface StripeWebhookEvent {
+  id: string
+  type: string
+  data: {
+    object: any
+  }
+}
+
+export interface BillingAddress {
+  line1: string
+  line2?: string
+  city: string
+  state?: string
+  postalCode: string
+  country: string
+}
+
+export interface PaginationParams {
+  limit?: number
+  startingAfter?: string
+  endingBefore?: string
+}
+
 export interface SubscriptionTier {
   id: string
   name: 'free' | 'pro' | 'enterprise'

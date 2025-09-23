@@ -74,7 +74,11 @@ export interface JobSearchFilters {
 }
 
 export interface JobSearchParams extends JobSearchFilters {
-  // Additional search parameters can be added here
+  // Additional search parameters
+  page?: number
+  limit?: number
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
 }
 
 export interface JobSearchResult {

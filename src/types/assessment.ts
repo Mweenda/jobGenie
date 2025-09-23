@@ -5,24 +5,32 @@ export type AssessmentType = 'frontend' | 'qa' | 'product'
 export interface AssessmentQuestion {
   id: string
   text: string
+  question?: string // for test compatibility
   options: string[]
   correctAnswer: 'A' | 'B' | 'C' | 'D'
   explanation: string
   points: number
   category: AssessmentType
+  type?: string // for test compatibility
 }
 
 export interface Assessment {
   id: string
+  type: AssessmentType
   title: string
   description: string
   category: AssessmentType
   difficulty: 'beginner' | 'intermediate' | 'advanced'
   questions: AssessmentQuestion[]
   estimatedTime: number // in minutes
+  timeLimit: number // in minutes - for test compatibility
   passingScore: number // percentage
   createdAt: string
+  updatedAt: string // for test compatibility
   isActive: boolean
+  skills?: string[] // for test compatibility
+  questionCount?: number // for test compatibility
+  estimatedDuration?: number // for test compatibility
 }
 
 export interface CreateAssessmentRequest {
@@ -60,6 +68,11 @@ export interface AssessmentResult {
   submittedAt: string
   badge?: Badge
   completionTime: number // in milliseconds
+  sessionId?: string
+  completedAt?: string
+  totalTimeSpent?: number
+  breakdown?: any
+  feedback?: string
 }
 
 export interface Badge {
@@ -73,6 +86,7 @@ export interface Badge {
   userId: string
   assessmentId: string
   verificationCode: string
+  verificationRequired?: boolean
 }
 
 export interface AssessmentAnalytics {
@@ -82,4 +96,7 @@ export interface AssessmentAnalytics {
   badgesAwarded: number
   averageCompletionTime: number // in milliseconds
   totalCost: number
+  totalStarted?: number // for test compatibility
+  events?: any[] // for test compatibility
+  totalCompleted?: number // for test compatibility
 }

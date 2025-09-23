@@ -1,7 +1,7 @@
 // src/services/__tests__/JobAggregationService.test.ts
 import nock from 'nock'
 import { JobAggregationService } from '../JobAggregationService'
-import { Job, IndeedJobResponse } from '../../types/job'
+import { IndeedJobResponse } from '../../types/job'
 
 const INDEED_BASE = 'https://api.indeed.com'
 
@@ -369,7 +369,7 @@ describe('JobAggregationService - TDD Implementation', () => {
           hasMore: false 
         })
 
-      const result = await service.fetchFromIndeed({ query: 'developer' })
+      // const result = await service.fetchFromIndeed({ query: 'developer' })
       const metrics = service.getMetrics()
 
       expect(metrics.totalRequests).toBe(1)

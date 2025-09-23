@@ -56,7 +56,9 @@ describe('RecruiterAIService - TDD Implementation', () => {
     service = new RecruiterAIService(mockConfig)
     
     // Get mock instances
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const OpenAI = require('openai').default
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Pinecone } = require('@pinecone-database/pinecone')
     
     mockOpenAI = new OpenAI()

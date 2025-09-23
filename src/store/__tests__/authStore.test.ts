@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { useAuthStore } from '../authStore'
 import * as AuthServiceModule from '../../services/authService'
-import * as FirebaseAuth from 'firebase/auth'
+// import * as FirebaseAuth from 'firebase/auth'
 
 // Mock Firebase auth
 vi.mock('firebase/auth', () => ({
@@ -23,7 +23,7 @@ vi.mock('../../services/authService', () => ({
 }))
 
 const mockAuthService = AuthServiceModule.AuthService as any
-const mockOnAuthStateChanged = FirebaseAuth.onAuthStateChanged as any
+// const mockOnAuthStateChanged = FirebaseAuth.onAuthStateChanged as any
 
 describe('AuthStore', () => {
   beforeEach(() => {

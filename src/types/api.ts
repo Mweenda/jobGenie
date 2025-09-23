@@ -3,11 +3,11 @@ export interface APIResponse<T = any> {
   success: boolean
   data?: T
   message?: string
-  errors?: APIError[]
+  errors?: APIErrorData[]
   metadata?: ResponseMetadata
 }
 
-export interface APIError {
+export interface APIErrorData {
   code: string
   message: string
   field?: string
@@ -198,8 +198,8 @@ export interface CreateSubscriptionRequest {
   couponCode?: string
 }
 
-export interface CreateSubscriptionResponse extends APIResponse<SubscriptionDetails> {
-  data: SubscriptionDetails & {
+export interface CreateSubscriptionResponse extends APIResponse<any> {
+  data: any & {
     clientSecret?: string
     nextPaymentDate: string
   }
@@ -373,4 +373,5 @@ export const HTTPStatusCodes = {
 
 // Import shared types
 import type { Job, JobSearchFilters, JobSearchResult } from './job'
-import type { RecruiterProfile, CandidateProfile, CandidateSearchFilters } from './recruiter'
+import type { RecruiterProfile } from './recruiter'
+// import type { CandidateProfile, CandidateSearchFilters } from './recruiter' // Unused

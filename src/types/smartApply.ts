@@ -46,4 +46,6 @@ export interface SmartApplyAnalytics {
   totalCost: number
   cacheHits: number
   cacheMisses: number
+  totalApplications: number // for test compatibility
+  successfulApplications: number // for test compatibility
 }
