@@ -305,12 +305,19 @@ export default function LandingPage() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="relative"
             >
-              <GlassCard variant="floating" className="p-8">
-                <div className="w-full h-64 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 flex items-center justify-center">
-                  <div className="text-center">
-                    <Sparkles className="w-16 h-16 text-blue-500 mx-auto mb-4" />
-                    <p className="text-lg font-medium">AI-Powered Career Matching</p>
-                    <p className="text-sm text-muted-foreground">Smart algorithms working for you</p>
+              <GlassCard variant="floating" className="p-4">
+                <div className="w-full h-64 rounded-lg overflow-hidden relative">
+                  <img 
+                    src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80" 
+                    alt="Modern office workspace with professionals collaborating"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="glass-prominent backdrop-blur-md bg-white/10 rounded-lg p-3">
+                      <p className="text-white font-medium text-sm">AI-Powered Career Matching</p>
+                      <p className="text-white/80 text-xs">Smart algorithms working for you</p>
+                    </div>
                   </div>
                 </div>
               </GlassCard>
