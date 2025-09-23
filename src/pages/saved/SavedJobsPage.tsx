@@ -97,32 +97,32 @@ function SavedJobCard({ job, delay, onRemove, onApply }: SavedJobCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
     >
-      <GlassCard variant="prominent" hover className="p-6 relative">
+      <GlassCard variant="prominent" hover className="p-4 sm:p-6 relative">
         {/* Status Badge */}
-        <div className="absolute top-4 right-4">
+        <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
           <Badge 
             variant={job.applied ? "default" : "secondary"}
-            className={job.applied ? "bg-green-500/20 text-green-600" : "bg-blue-500/20 text-blue-600"}
+            className={`text-xs ${job.applied ? "bg-green-500/20 text-green-600" : "bg-blue-500/20 text-blue-600"}`}
           >
             {job.applied ? "Applied" : "Saved"}
           </Badge>
         </div>
 
         {/* Job Header */}
-        <div className="flex items-start space-x-4 mb-4">
-          <div className="w-12 h-12 rounded-lg overflow-hidden glass-subtle">
+        <div className="flex items-start space-x-3 sm:space-x-4 mb-4 pr-16 sm:pr-20">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden glass-subtle flex-shrink-0">
             <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 flex items-center justify-center">
               {job.logo ? (
-                <span className="text-2xl">{job.logo}</span>
+                <span className="text-lg sm:text-2xl">{job.logo}</span>
               ) : (
-                <Building2 className="w-6 h-6 text-blue-500" />
+                <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />
               )}
             </div>
           </div>
           
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-lg mb-1">{job.title}</h3>
-            <p className="text-muted-foreground">{job.company}</p>
+            <h3 className="font-semibold text-base sm:text-lg mb-1 truncate">{job.title}</h3>
+            <p className="text-muted-foreground text-sm sm:text-base truncate">{job.company}</p>
           </div>
         </div>
 
@@ -255,29 +255,31 @@ const SavedJobsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       <Header />
-      <div className="container mx-auto px-6 py-8 pt-24">
+      <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8 pt-20 sm:pt-24">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-                        <h1 className="text-display-lg mb-2 flex items-center space-x-2">
-                        <Bookmark className="w-8 h-8 text-blue-500" />
-                        <span>Saved Jobs</span>
-                      </h1>
-                      <p className="text-body-lg text-muted-foreground">Keep track of opportunities you're interested in</p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-4 sm:space-y-0">
+            <div className="text-center sm:text-left">
+              <h1 className="text-xl sm:text-display-lg mb-2 flex items-center justify-center sm:justify-start space-x-2">
+                <Bookmark className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500" />
+                <span>Saved Jobs</span>
+              </h1>
+              <p className="text-sm sm:text-body-lg text-muted-foreground">Keep track of opportunities you're interested in</p>
             </div>
             
             <FloatingButton
               variant="glass"
               onClick={() => setShowFilters(!showFilters)}
+              className="self-center sm:self-auto"
             >
               <SlidersHorizontal className="w-4 h-4 mr-2" />
-              Filters
+              <span className="hidden sm:inline">Filters</span>
+              <span className="sm:hidden">Filter</span>
             </FloatingButton>
           </div>
 

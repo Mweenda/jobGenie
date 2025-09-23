@@ -150,42 +150,44 @@ const JobsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       <Header />
-      <div className="container mx-auto px-6 py-8 pt-24">
+      <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8 pt-20 sm:pt-24">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-                      <h1 className="text-display-lg mb-2">Find Your Dream Job</h1>
-                      <p className="text-body-lg text-muted-foreground">Discover amazing opportunities with AI-powered matching</p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-4 sm:space-y-0">
+            <div className="text-center sm:text-left">
+              <h1 className="text-2xl sm:text-display-lg mb-2">Find Your Dream Job</h1>
+              <p className="text-base sm:text-body-lg text-muted-foreground">Discover amazing opportunities with AI-powered matching</p>
             </div>
             
             <FloatingButton
               variant="glass"
               onClick={() => setShowFilters(!showFilters)}
+              className="self-center sm:self-auto"
             >
               <SlidersHorizontal className="w-4 h-4 mr-2" />
-              Filters
+              <span className="hidden sm:inline">Filters</span>
+              <span className="sm:hidden">Filter</span>
             </FloatingButton>
           </div>
 
           {/* Search Bar */}
-          <GlassCard variant="floating" className="p-4">
-            <div className="flex space-x-4">
+          <GlassCard variant="floating" className="p-3 sm:p-4">
+            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                 <Input
                   placeholder="Search jobs, companies, or skills..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 glass-subtle border-0"
+                  className="pl-9 sm:pl-10 glass-subtle border-0 text-sm sm:text-base"
                 />
               </div>
-              <FloatingButton variant="primary">
+              <FloatingButton variant="primary" className="w-full sm:w-auto">
                 <Search className="w-4 h-4 mr-2" />
                 Search
               </FloatingButton>
@@ -201,14 +203,14 @@ const JobsPage: React.FC = () => {
               transition={{ duration: 0.3 }}
               className="mt-4"
             >
-              <GlassCard variant="prominent" className="p-4">
-                <div className="flex flex-wrap gap-4">
+              <GlassCard variant="prominent" className="p-3 sm:p-4">
+                <div className="flex flex-wrap gap-2 sm:gap-4">
                   {['Remote', 'Full-time', '$100k+', 'Tech', 'Featured'].map((filter) => (
                     <Button 
                       key={filter}
                       variant="outline" 
                       size="sm" 
-                      className={`glass-subtle ${
+                      className={`glass-subtle text-xs sm:text-sm ${
                         selectedFilters.includes(filter) ? 'bg-blue-500/20 text-blue-600' : ''
                       }`}
                       onClick={() => {
@@ -235,16 +237,16 @@ const JobsPage: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex items-center justify-between"
+            className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0"
           >
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-sm sm:text-base text-center sm:text-left">
               Showing {filteredJobs.length} jobs • Updated 2 minutes ago
             </p>
-            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+            <div className="flex items-center justify-center sm:justify-end space-x-2 text-xs sm:text-sm text-muted-foreground">
               <span>Sort by:</span>
-              <Button variant="ghost" size="sm" className="font-medium">
+              <Button variant="ghost" size="sm" className="font-medium text-xs sm:text-sm">
                 Most Recent
-                <ChevronDown className="w-4 h-4 ml-1" />
+                <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
               </Button>
             </div>
           </motion.div>

@@ -94,19 +94,19 @@ const SettingsPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       <Header />
       
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 pt-20 sm:pt-24">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8 text-center sm:text-left"
         >
-          <h1 className="text-display-lg mb-2 flex items-center space-x-3">
-            <SettingsIcon className="w-8 h-8 text-blue-500" />
+          <h1 className="text-xl sm:text-display-lg mb-2 flex items-center justify-center sm:justify-start space-x-2 sm:space-x-3">
+            <SettingsIcon className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500" />
             <span>Settings</span>
           </h1>
-          <p className="text-body-lg text-muted-foreground">
+          <p className="text-sm sm:text-body-lg text-muted-foreground">
             Manage your account settings and preferences
           </p>
         </motion.div>
@@ -117,23 +117,27 @@ const SettingsPage: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <Tabs defaultValue="profile" className="space-y-6">
-            <GlassCard variant="floating" className="p-2">
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 glass-subtle border-0 bg-transparent">
-                <TabsTrigger value="profile" className="flex items-center space-x-2 glass-subtle data-[state=active]:glass-prominent">
-                  <User className="w-4 h-4" />
+            <GlassCard variant="floating" className="p-1 sm:p-2">
+              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 glass-subtle border-0 bg-transparent gap-1">
+                <TabsTrigger value="profile" className="flex items-center justify-center space-x-1 sm:space-x-2 glass-subtle data-[state=active]:glass-prominent text-xs sm:text-sm p-2 sm:p-3">
+                  <User className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span className="hidden sm:inline">Profile</span>
+                  <span className="sm:hidden">Profile</span>
                 </TabsTrigger>
-                <TabsTrigger value="notifications" className="flex items-center space-x-2 glass-subtle data-[state=active]:glass-prominent">
-                  <Bell className="w-4 h-4" />
+                <TabsTrigger value="notifications" className="flex items-center justify-center space-x-1 sm:space-x-2 glass-subtle data-[state=active]:glass-prominent text-xs sm:text-sm p-2 sm:p-3">
+                  <Bell className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span className="hidden sm:inline">Notifications</span>
+                  <span className="sm:hidden">Alerts</span>
                 </TabsTrigger>
-                <TabsTrigger value="privacy" className="flex items-center space-x-2 glass-subtle data-[state=active]:glass-prominent">
-                  <Shield className="w-4 h-4" />
+                <TabsTrigger value="privacy" className="flex items-center justify-center space-x-1 sm:space-x-2 glass-subtle data-[state=active]:glass-prominent text-xs sm:text-sm p-2 sm:p-3">
+                  <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span className="hidden sm:inline">Privacy</span>
+                  <span className="sm:hidden">Privacy</span>
                 </TabsTrigger>
-                <TabsTrigger value="billing" className="flex items-center space-x-2 glass-subtle data-[state=active]:glass-prominent">
-                  <CreditCard className="w-4 h-4" />
+                <TabsTrigger value="billing" className="flex items-center justify-center space-x-1 sm:space-x-2 glass-subtle data-[state=active]:glass-prominent text-xs sm:text-sm p-2 sm:p-3">
+                  <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span className="hidden sm:inline">Billing</span>
+                  <span className="sm:hidden">Billing</span>
                 </TabsTrigger>
               </TabsList>
             </GlassCard>

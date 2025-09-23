@@ -269,24 +269,24 @@ const MessagesPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       <Header />
       
-      <div className="h-screen pt-20 flex">
+      <div className="h-screen pt-16 sm:pt-20 flex">
         {/* Conversations Sidebar */}
-        <div className={`w-full md:w-96 flex flex-col ${
+        <div className={`w-full md:w-80 lg:w-96 flex flex-col ${
           !showConversationList && "hidden md:flex"
         }`}>
-          <div className="h-full p-4">
+          <div className="h-full p-2 sm:p-4">
             <GlassCard variant="floating" className="h-full flex flex-col">
               {/* Sidebar Header */}
-              <div className="p-6 border-b border-white/10">
+              <div className="p-4 sm:p-6 border-b border-white/10">
                 <motion.div
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                          <h1 className="text-display-md mb-4 flex items-center space-x-2">
-                            <MessageSquare className="w-6 h-6 text-blue-500" />
-                            <span>Messages</span>
-                          </h1>
+                  <h1 className="text-lg sm:text-display-md mb-3 sm:mb-4 flex items-center space-x-2">
+                    <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />
+                    <span>Messages</span>
+                  </h1>
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                     <Input
