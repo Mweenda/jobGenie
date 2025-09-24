@@ -100,18 +100,6 @@ export default function Header() {
               <div className="animate-pulse glass-subtle h-10 w-32 rounded-md" />
             ) : isAuthenticated && user ? (
               <>
-                {/* Quick Nav Links */}
-                <nav className="hidden lg:flex items-center space-x-6">
-                  <Link to="/jobs" className="text-sm hover:text-blue-500 transition-colors">
-                    Jobs
-                  </Link>
-                  <Link to="/saved" className="text-sm hover:text-blue-500 transition-colors">
-                    Saved
-                  </Link>
-                  <Link to="/messages" className="text-sm hover:text-blue-500 transition-colors">
-                    Messages
-                  </Link>
-                </nav>
 
                 {/* Notifications */}
                 <div className="relative">
