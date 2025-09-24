@@ -122,7 +122,7 @@ export default function AuthModal({ isOpen, onClose, mode, onModeChange, onSucce
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 20 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="w-[90%] max-w-[400px] relative"
+        className={`w-[90%] ${mode === 'signup' ? 'max-w-[450px]' : 'max-w-[400px]'} relative`}
       >
         <GlassCard variant="floating" className="relative overflow-hidden">
           {/* Close Button */}
@@ -220,12 +220,12 @@ export default function AuthModal({ isOpen, onClose, mode, onModeChange, onSucce
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
-                  className="space-y-4"
+                  className="space-y-3"
                 >
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label htmlFor="firstName" className="block text-sm font-medium mb-2 flex items-center space-x-2">
-                        <User className="w-4 h-4 text-blue-500" />
+                      <label htmlFor="firstName" className="block text-sm font-medium mb-1.5 flex items-center space-x-1.5">
+                        <User className="w-3.5 h-3.5 text-blue-500" />
                         <span>First Name</span>
                       </label>
                       <Input
@@ -236,11 +236,11 @@ export default function AuthModal({ isOpen, onClose, mode, onModeChange, onSucce
                         value={formData.firstName}
                         onChange={handleChange}
                         placeholder="John"
-                        className="glass-subtle border-0 focus:glass-prominent"
+                        className="glass-subtle border-0 focus:glass-prominent h-9"
                       />
                     </div>
                     <div>
-                      <label htmlFor="lastName" className="block text-sm font-medium mb-2">
+                      <label htmlFor="lastName" className="block text-sm font-medium mb-1.5">
                         <span>Last Name</span>
                       </label>
                       <Input
@@ -251,43 +251,45 @@ export default function AuthModal({ isOpen, onClose, mode, onModeChange, onSucce
                         value={formData.lastName}
                         onChange={handleChange}
                         placeholder="Doe"
-                        className="glass-subtle border-0 focus:glass-prominent"
+                        className="glass-subtle border-0 focus:glass-prominent h-9"
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label htmlFor="jobTitle" className="block text-sm font-medium mb-2 flex items-center space-x-2">
-                      <Sparkles className="w-4 h-4 text-purple-500" />
-                      <span>Job Title <span className="text-xs text-muted-foreground">(Optional)</span></span>
-                    </label>
-                    <Input
-                      id="jobTitle"
-                      name="jobTitle"
-                      type="text"
-                      value={formData.jobTitle}
-                      onChange={handleChange}
-                      placeholder="e.g., Software Engineer, Product Manager"
-                      className="glass-subtle border-0 focus:glass-prominent"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="experienceLevel" className="block text-sm font-medium mb-2">
-                      Experience Level
-                    </label>
-                    <select
-                      id="experienceLevel"
-                      name="experienceLevel"
-                      value={formData.experienceLevel}
-                      onChange={handleChange}
-                      className="flex h-10 w-full rounded-md glass-subtle border-0 px-3 py-2 text-sm focus:glass-prominent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50"
-                    >
-                      <option value="entry">Entry Level (0-2 years)</option>
-                      <option value="mid">Mid Level (3-5 years)</option>
-                      <option value="senior">Senior Level (6+ years)</option>
-                      <option value="executive">Executive Level</option>
-                    </select>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label htmlFor="jobTitle" className="block text-sm font-medium mb-1.5 flex items-center space-x-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-purple-500" />
+                        <span>Job Title</span>
+                        <span className="text-xs text-muted-foreground">(Optional)</span>
+                      </label>
+                      <Input
+                        id="jobTitle"
+                        name="jobTitle"
+                        type="text"
+                        value={formData.jobTitle}
+                        onChange={handleChange}
+                        placeholder="Software Engineer"
+                        className="glass-subtle border-0 focus:glass-prominent h-9"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="experienceLevel" className="block text-sm font-medium mb-1.5">
+                        Experience
+                      </label>
+                      <select
+                        id="experienceLevel"
+                        name="experienceLevel"
+                        value={formData.experienceLevel}
+                        onChange={handleChange}
+                        className="flex h-9 w-full rounded-md glass-subtle border-0 px-3 py-2 text-sm focus:glass-prominent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50"
+                      >
+                        <option value="entry">Entry (0-2y)</option>
+                        <option value="mid">Mid (3-5y)</option>
+                        <option value="senior">Senior (6y+)</option>
+                        <option value="executive">Executive</option>
+                      </select>
+                    </div>
                   </div>
                 </motion.div>
               )}
@@ -309,7 +311,7 @@ export default function AuthModal({ isOpen, onClose, mode, onModeChange, onSucce
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="john@example.com"
-                  className="glass-subtle border-0 focus:glass-prominent"
+                  className="glass-subtle border-0 focus:glass-prominent h-10"
                 />
               </motion.div>
 
@@ -338,7 +340,7 @@ export default function AuthModal({ isOpen, onClose, mode, onModeChange, onSucce
                     value={formData.password}
                     onChange={handleChange}
                     placeholder={mode === 'signup' ? 'Create a strong password' : '••••••••'}
-                    className="glass-subtle border-0 focus:glass-prominent pr-10"
+                    className="glass-subtle border-0 focus:glass-prominent pr-10 h-10"
                   />
                   <motion.button
                     type="button"
