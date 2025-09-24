@@ -7,6 +7,7 @@ import { Input } from '../ui/input'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '../ui/dropdown-menu'
 import { FloatingButton } from '../ui/floating-button'
+import { HamburgerMenu } from '../ui/hamburger-menu'
 
 export default function Header() {
   const { user, isAuthenticated, isLoading, signOut } = useAuth()
@@ -57,18 +58,26 @@ export default function Header() {
     >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center space-x-2"
-          >
-            <Link to={isAuthenticated ? "/home" : "/"} className="flex items-center space-x-2">
-              <Sparkles className="w-8 h-8 text-blue-500" />
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                <span className="text-brand-md">JobGenie</span>
-              </span>
-            </Link>
-          </motion.div>
+          {/* Logo with Hamburger Menu */}
+          <div className="flex items-center space-x-3">
+            {/* Hamburger Menu (Authenticated Only) */}
+            {isAuthenticated && (
+              <HamburgerMenu />
+            )}
+            
+            {/* Logo */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center space-x-2"
+            >
+              <Link to={isAuthenticated ? "/home" : "/"} className="flex items-center space-x-2">
+                <Sparkles className="w-8 h-8 text-blue-500" />
+                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  <span className="text-brand-md">JobGenie</span>
+                </span>
+              </Link>
+            </motion.div>
+          </div>
 
           {/* Search Bar (Authenticated Only) */}
           {isAuthenticated && (

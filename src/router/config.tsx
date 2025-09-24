@@ -11,6 +11,7 @@ export function AppRouter() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/home" element={<HomePage />} />
+      <Route path="/dashboard" element={<HomePage />} />
       <Route path="/jobs" element={<JobsPage />} />
       <Route path="/saved" element={<SavedJobsPage />} />
       <Route path="/messages" element={<MessagesPage />} />
