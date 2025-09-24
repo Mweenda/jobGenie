@@ -228,10 +228,18 @@ export default function Header() {
               </>
             ) : (
               <div className="flex items-center space-x-3">
-                <FloatingButton variant="glass" size="sm">
+                <FloatingButton 
+                  variant="glass" 
+                  size="sm"
+                  onClick={() => navigate('/?action=signin')}
+                >
                   Sign In
                 </FloatingButton>
-                <FloatingButton variant="primary" size="sm">
+                <FloatingButton 
+                  variant="primary" 
+                  size="sm"
+                  onClick={() => navigate('/?action=signup')}
+                >
                   Get Started
                 </FloatingButton>
               </div>

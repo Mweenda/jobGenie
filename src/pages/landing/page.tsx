@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Sparkles, Zap, Users, CheckCircle, User, LogOut, Briefcase, Search, Brain, TrendingUp } from 'lucide-react'
 import { Button } from '../../components/ui/button'
@@ -74,7 +74,19 @@ export default function LandingPage() {
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin')
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { user, isAuthenticated, isLoading, signOut } = useAuth()
+
+  // Handle URL query parameters for auth modal
+  useEffect(() => {
+    const action = searchParams.get('action')
+    if (action === 'signin' || action === 'signup') {
+      setAuthMode(action)
+      setShowAuthModal(true)
+      // Clear the query parameter
+      setSearchParams({})
+    }
+  }, [searchParams, setSearchParams])
 
   // Redirect authenticated users to home page
   useEffect(() => {
