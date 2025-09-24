@@ -102,7 +102,11 @@ export const HamburgerMenu: React.FC = () => {
       {/* Hamburger Button */}
       <motion.button
         onClick={handleMenuClick}
-        className="p-2 rounded-lg glass-subtle hover:glass-prominent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+        className={`p-3 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
+          isOpen 
+            ? 'bg-blue-500/20 text-blue-600 dark:text-blue-400 shadow-lg border border-blue-500/30' 
+            : 'glass-subtle hover:glass-prominent hover:shadow-md'
+        }`}
         aria-expanded={isOpen}
         aria-controls="hamburger-menu"
         aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
@@ -118,7 +122,7 @@ export const HamburgerMenu: React.FC = () => {
               exit={{ rotate: 90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <X className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+              <X className="w-5 h-5" />
             </motion.div>
           ) : (
             <motion.div
@@ -128,13 +132,13 @@ export const HamburgerMenu: React.FC = () => {
               exit={{ rotate: -90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <Menu className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+              <Menu className="w-5 h-5" />
             </motion.div>
           )}
         </AnimatePresence>
       </motion.button>
 
-      {/* Dropdown Menu */}
+      {/* Menu Content */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -148,14 +152,14 @@ export const HamburgerMenu: React.FC = () => {
               onClick={() => setIsOpen(false)}
             />
 
-            {/* Menu Content */}
+            {/* Desktop Dropdown */}
             <motion.div
               id="hamburger-menu"
               initial={{ 
                 opacity: 0, 
                 scale: 0.95,
-                x: -20,
-                y: 10 
+                x: -10,
+                y: -5 
               }}
               animate={{ 
                 opacity: 1, 
@@ -166,18 +170,21 @@ export const HamburgerMenu: React.FC = () => {
               exit={{ 
                 opacity: 0, 
                 scale: 0.95,
-                x: -20,
-                y: 10 
+                x: -10,
+                y: -5 
               }}
               transition={{ 
-                duration: 0.2,
-                ease: "easeOut"
+                duration: 0.25,
+                ease: "easeOut",
+                type: "spring",
+                stiffness: 300,
+                damping: 30
               }}
-              className="absolute top-full left-0 mt-2 z-50"
+              className="hidden md:block absolute top-full left-0 mt-2 z-[60] w-[280px]"
             >
               <GlassCard 
                 variant="floating" 
-                className="min-w-[200px] p-2 shadow-xl border border-white/20"
+                className="w-full p-3 shadow-2xl border border-white/30 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl"
               >
                 <div className="space-y-1">
                   {menuOptions.map((option, index) => {
@@ -194,12 +201,12 @@ export const HamburgerMenu: React.FC = () => {
                           delay: index * 0.05 
                         }}
                         onClick={() => handleOptionClick(option.path)}
-                        className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200 ${
+                        className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 font-medium ${
                           isActive
-                            ? 'bg-blue-500/20 text-blue-600 dark:text-blue-400 glass-prominent'
-                            : 'text-gray-700 dark:text-gray-300 hover:glass-subtle hover:text-blue-600 dark:hover:text-blue-400'
+                            ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-600 dark:text-blue-400 shadow-lg border border-blue-500/30'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-white/10 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md'
                         }`}
-                        whileHover={{ x: 4 }}
+                        whileHover={{ x: 6, scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
                         <IconComponent className={`w-4 h-4 ${
@@ -210,6 +217,88 @@ export const HamburgerMenu: React.FC = () => {
                           <motion.div
                             layoutId="activeIndicator"
                             className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-500"
+                            transition={{ duration: 0.2 }}
+                          />
+                        )}
+                      </motion.button>
+                    )
+                  })}
+                </div>
+              </GlassCard>
+            </motion.div>
+
+            {/* Mobile Drawer */}
+            <motion.div
+              initial={{ 
+                opacity: 0, 
+                x: -300
+              }}
+              animate={{ 
+                opacity: 1, 
+                x: 0
+              }}
+              exit={{ 
+                opacity: 0, 
+                x: -300
+              }}
+              transition={{ 
+                duration: 0.3,
+                ease: "easeOut",
+                type: "spring",
+                stiffness: 300,
+                damping: 30
+              }}
+              className="md:hidden fixed top-0 left-0 h-full w-80 z-50"
+            >
+              <GlassCard 
+                variant="floating" 
+                className="h-full w-full p-6 shadow-2xl border-r border-white/30 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-none rounded-r-2xl"
+              >
+                {/* Mobile Menu Header */}
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/20">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Navigation</h2>
+                  <motion.button
+                    onClick={() => setIsOpen(false)}
+                    className="p-2 rounded-lg glass-subtle hover:glass-prominent transition-all duration-200"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <X className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                  </motion.button>
+                </div>
+
+                {/* Mobile Menu Items */}
+                <div className="space-y-2">
+                  {menuOptions.map((option, index) => {
+                    const IconComponent = option.icon
+                    const isActive = isActivePath(option.path)
+                    
+                    return (
+                      <motion.button
+                        key={option.id}
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ 
+                          duration: 0.3, 
+                          delay: index * 0.1 
+                        }}
+                        onClick={() => handleOptionClick(option.path)}
+                        className={`w-full flex items-center space-x-4 px-4 py-4 rounded-xl text-left transition-all duration-200 font-medium ${
+                          isActive
+                            ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-600 dark:text-blue-400 shadow-lg border border-blue-500/30'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-white/10 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md'
+                        }`}
+                        whileHover={{ x: 8, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <IconComponent className={`w-5 h-5 ${
+                          isActive ? 'text-blue-600 dark:text-blue-400' : ''
+                        }`} />
+                        <span className="font-medium text-base">{option.label}</span>
+                        {isActive && (
+                          <motion.div
+                            layoutId="mobileActiveIndicator"
+                            className="ml-auto w-2 h-2 rounded-full bg-blue-500"
                             transition={{ duration: 0.2 }}
                           />
                         )}
