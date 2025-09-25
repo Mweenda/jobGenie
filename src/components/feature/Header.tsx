@@ -200,8 +200,8 @@ export default function Header() {
                       className="absolute right-0 mt-3 w-96 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 z-50"
                     >
                       <div className="p-5 border-b border-gray-200/30">
-                        <h3 className="font-semibold text-gray-900 text-lg">Notifications</h3>
-                        <p className="text-gray-500 text-sm mt-1">{unreadCount} unread notifications</p>
+                        <h3 className="font-semibold text-adaptive text-lg">Notifications</h3>
+                        <p className="text-adaptive-muted text-sm mt-1">{unreadCount} unread notifications</p>
                       </div>
                       <div className="max-h-80 overflow-y-auto">
                         {notifications.map((notification) => (
@@ -214,14 +214,14 @@ export default function Header() {
                             <div className="flex justify-between items-start">
                               <div className="flex-1 pr-3">
                                 <div className="flex items-center space-x-2">
-                                  <h4 className="font-semibold text-gray-900 text-sm">{notification.title}</h4>
+                                  <h4 className="font-semibold text-adaptive text-sm">{notification.title}</h4>
                                   {notification.unread && (
                                     <div className="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
                                   )}
                                 </div>
-                                <p className="text-gray-700 text-sm mt-2 leading-relaxed">{notification.message}</p>
-                                <p className="text-gray-500 text-xs mt-3 flex items-center">
-                                  <span className="inline-block w-1 h-1 bg-gray-400 rounded-full mr-2"></span>
+                                <p className="text-adaptive-secondary text-sm mt-2 leading-relaxed">{notification.message}</p>
+                                <p className="text-adaptive-muted text-xs mt-3 flex items-center">
+                                  <span className="inline-block w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full mr-2"></span>
                                   {notification.time}
                                 </p>
                               </div>
@@ -230,7 +230,7 @@ export default function Header() {
                         ))}
                       </div>
                       <div className="p-4 border-t border-gray-200/30 bg-gray-50/30">
-                        <button className="text-blue-600 font-medium text-sm hover:text-blue-700 w-full text-center transition-colors py-2 px-4 rounded-lg hover:bg-blue-50">
+                        <button className="text-blue-600 dark:text-blue-400 font-medium text-sm hover:text-blue-700 dark:hover:text-blue-300 w-full text-center transition-colors py-2 px-4 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20">
                           View all notifications
                         </button>
                       </div>
@@ -311,12 +311,12 @@ export default function Header() {
                                 </AvatarFallback>
                               </Avatar>
                               <div className="flex-1 min-w-0">
-                                <p className="text-sm font-semibold text-gray-900 truncate">
+                                <p className="text-sm font-semibold text-adaptive truncate">
                                   {user.firstName && user.lastName
                                     ? `${user.firstName} ${user.lastName}`
                                     : user.firstName || 'User'}
                                 </p>
-                                <p className="text-xs text-gray-600 truncate">
+                                <p className="text-xs text-adaptive-secondary truncate">
                                   {user.email}
                                 </p>
                               </div>
@@ -342,7 +342,7 @@ export default function Header() {
                                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 font-medium ${
                                     isActive
                                       ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-600 dark:text-blue-400 shadow-lg border border-blue-500/30'
-                                      : 'text-gray-700 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-white/10 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md'
+                                      : 'text-adaptive hover:bg-white/50 dark:hover:bg-white/10 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md'
                                   }`}
                                   whileHover={{ x: 6, scale: 1.02 }}
                                   whileTap={{ scale: 0.98 }}
@@ -374,7 +374,7 @@ export default function Header() {
                                 delay: userMenuOptions.length * 0.05 
                               }}
                               onClick={handleSignOut}
-                              className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 hover:shadow-md"
+                              className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:shadow-md"
                               whileHover={{ x: 6, scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
                             >

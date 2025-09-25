@@ -153,7 +153,7 @@ const ConversationItem: React.FC<{
             {/* Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
-                <h3 className="font-semibold text-sm text-gray-900 truncate">
+                <h3 className="font-semibold text-sm text-adaptive truncate">
                   {conversation.name}
                 </h3>
                 <div className="flex items-center space-x-2 flex-shrink-0">
@@ -166,13 +166,13 @@ const ConversationItem: React.FC<{
                 </div>
               </div>
               
-              <p className="text-xs text-gray-600 mb-1.5 flex items-center">
-                <Briefcase className="w-3 h-3 mr-1 text-gray-400" />
+              <p className="text-xs text-adaptive-secondary mb-1.5 flex items-center">
+                <Briefcase className="w-3 h-3 mr-1 text-gray-400 dark:text-gray-500" />
                 {conversation.role} at {conversation.company}
               </p>
               
               <div className="flex items-center justify-between">
-                <p className="text-xs text-gray-500 truncate pr-2 leading-relaxed flex-1">
+                <p className="text-xs text-adaptive-muted truncate pr-2 leading-relaxed flex-1">
                   {conversation.lastMessage}
                 </p>
                 
@@ -294,8 +294,8 @@ const MessagesPage: React.FC = () => {
                         <MessageSquare className="w-5 h-5 text-blue-600" />
                       </div>
                       <div>
-                        <h1 className="text-lg font-bold text-gray-900">Messages</h1>
-                        <p className="text-xs text-gray-500">{mockConversations.length} conversations</p>
+                        <h1 className="text-lg font-bold text-adaptive">Messages</h1>
+                        <p className="text-xs text-adaptive-muted">{mockConversations.length} conversations</p>
                       </div>
                     </div>
                   </div>
@@ -384,14 +384,14 @@ const MessagesPage: React.FC = () => {
                       </div>
                       
                       <div>
-                        <h2 className="text-lg font-bold text-gray-900">{selectedConversation.name}</h2>
+                        <h2 className="text-lg font-bold text-adaptive">{selectedConversation.name}</h2>
                         <div className="flex items-center space-x-3 text-sm">
-                          <p className="text-gray-600 flex items-center">
+                          <p className="text-adaptive-secondary flex items-center">
                             <Briefcase className="w-3 h-3 mr-1.5" />
                             {selectedConversation.role} at {selectedConversation.company}
                           </p>
-                          <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                          <p className="text-gray-500">
+                          <span className="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full"></span>
+                          <p className="text-adaptive-muted">
                             {selectedConversation.online ? 'Online now' : 'Last seen recently'}
                           </p>
                         </div>

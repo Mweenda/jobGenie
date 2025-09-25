@@ -117,12 +117,12 @@ export default function ProfilePage() {
                 <User className="w-12 h-12 text-white" />
               </div>
               <div className="text-center sm:text-left">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-3xl font-bold text-adaptive mb-2">
                   {user.firstName} {user.lastName}
                 </h1>
-                <p className="text-lg text-gray-600 mb-3">{user.jobTitle || 'Job Title Not Set'}</p>
-                <div className="flex items-center justify-center sm:justify-start text-gray-500 space-x-2">
-                  <div className="p-1.5 bg-gray-100 rounded-lg">
+                <p className="text-lg text-adaptive-secondary mb-3">{user.jobTitle || 'Job Title Not Set'}</p>
+                <div className="flex items-center justify-center sm:justify-start text-adaptive-muted space-x-2">
+                  <div className="p-1.5 bg-gray-100 dark:bg-gray-700 rounded-lg">
                     <Mail className="w-4 h-4" />
                   </div>
                   <span className="text-sm">{user.email}</span>
@@ -173,9 +173,9 @@ export default function ProfilePage() {
           <div className="lg:col-span-2 space-y-8">
             {/* Basic Information */}
             <div className="glass-floating rounded-2xl p-6 backdrop-blur-xl">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-                <div className="p-2 bg-blue-100 rounded-lg mr-3">
-                  <User className="w-5 h-5 text-blue-600" />
+              <h2 className="text-xl font-semibold text-adaptive mb-6 flex items-center">
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg mr-3">
+                  <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 Basic Information
               </h2>
