@@ -156,42 +156,91 @@ export default function JobDetailModal({
               </div>
             )}
 
-            {/* Company Info */}
-            <div className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-3">About {job.company.name}</h2>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <h3 className="font-medium text-gray-900">{job.company.name}</h3>
-                    <p className="text-sm text-gray-600">{job.company.industry}</p>
-                  </div>
-                  {job.company.website && (
-                    <a
-                      href={job.company.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center text-blue-600 hover:text-blue-700 text-sm"
-                    >
-                      <ExternalLink className="w-4 h-4 mr-1" />
-                      Website
-                    </a>
-                  )}
+            {/* Enhanced Company Info with Job Poster Details */}
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                <div className="p-2 bg-blue-100 rounded-lg mr-3">
+                  <Building className="w-5 h-5 text-blue-600" />
                 </div>
-                
-                <div className="grid grid-cols-2 gap-4 mb-3 text-sm">
-                  <div className="flex items-center text-gray-600">
-                    <Users className="w-4 h-4 mr-2" />
-                    {formatCompanySize(job.company.size || null)}
+                About {job.company.name}
+              </h2>
+              
+              <div className="bg-gradient-to-br from-white to-blue-50/30 rounded-2xl p-6 border border-blue-100/50 shadow-lg">
+                <div className="flex flex-col lg:flex-row lg:items-start space-y-4 lg:space-y-0 lg:space-x-6">
+                  {/* Company Logo */}
+                  <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md border border-gray-100">
+                    {job.company.logoUrl ? (
+                      <img 
+                        src={job.company.logoUrl} 
+                        alt={`${job.company.name} logo`}
+                        className="w-16 h-16 object-contain rounded-xl"
+                      />
+                    ) : (
+                      <Building className="w-10 h-10 text-gray-400" />
+                    )}
                   </div>
-                  <div className="flex items-center text-gray-600">
-                    <Building className="w-4 h-4 mr-2" />
-                    {job.company.industry}
+                  
+                  {/* Company Details */}
+                  <div className="flex-1 space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900">{job.company.name}</h3>
+                        <p className="text-blue-600 font-medium">{job.company.industry}</p>
+                      </div>
+                      {job.company.website && (
+                        <a 
+                          href={job.company.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl"
+                        >
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Visit Website
+                        </a>
+                      )}
+                    </div>
+                    
+                    {/* Company Metadata Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <div className="flex items-center space-x-3 p-3 bg-white/80 rounded-xl border border-gray-100">
+                        <div className="p-2 bg-purple-100 rounded-lg">
+                          <Building className="w-4 h-4 text-purple-600" />
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Industry</p>
+                          <p className="text-sm font-semibold text-gray-900">{job.company.industry}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3 p-3 bg-white/80 rounded-xl border border-gray-100">
+                        <div className="p-2 bg-green-100 rounded-lg">
+                          <Users className="w-4 h-4 text-green-600" />
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Company Size</p>
+                          <p className="text-sm font-semibold text-gray-900">{formatCompanySize(job.company.size || null)}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3 p-3 bg-white/80 rounded-xl border border-gray-100">
+                        <div className="p-2 bg-orange-100 rounded-lg">
+                          <MapPin className="w-4 h-4 text-orange-600" />
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Location</p>
+                          <p className="text-sm font-semibold text-gray-900">{job.location}</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {job.company.description && (
+                      <div className="mt-4 p-4 bg-white/60 rounded-xl border border-gray-100">
+                        <h4 className="font-semibold text-gray-900 mb-2">About the Company</h4>
+                        <p className="text-gray-700 leading-relaxed">{job.company.description}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
-                
-                {job.company.description && (
-                  <p className="text-gray-700 text-sm">{job.company.description}</p>
-                )}
               </div>
             </div>
 

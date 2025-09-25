@@ -150,7 +150,7 @@ const JobsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       <Header />
-      <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8 pt-20 sm:pt-24">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8 pt-20 sm:pt-24 max-w-7xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -254,7 +254,7 @@ const JobsPage: React.FC = () => {
           {isLoading ? (
             <LoadingGrid count={6} />
           ) : filteredJobs.length > 0 ? (
-            <div className="grid gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
               {filteredJobs.map((job, index) => (
                 <EnhancedJobCard 
                   key={job.id} 

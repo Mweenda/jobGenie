@@ -149,7 +149,7 @@
   }
   
   .glass-prominent {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: var(--depth-2);
@@ -163,18 +163,18 @@
   }
 
   .dark .glass-subtle {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
   
   .dark .glass-prominent {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
   }
   
   .dark .glass-floating {
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
   }
 
   .gradient-primary {
@@ -183,5 +183,36 @@
   
   .gradient-secondary {
     background: var(--gradient-secondary);
+  }
+
+  /* Enhanced text contrast utilities for glassmorphism */
+  .glass-text-primary {
+    color: rgba(15, 23, 42, 0.95);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  }
+  
+  .glass-text-secondary {
+    color: rgba(71, 85, 105, 0.9);
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+  }
+  
+  .glass-text-muted {
+    color: rgba(100, 116, 139, 0.85);
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
+  }
+
+  .dark .glass-text-primary {
+    color: rgba(248, 250, 252, 0.95);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  }
+  
+  .dark .glass-text-secondary {
+    color: rgba(203, 213, 225, 0.9);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+  }
+  
+  .dark .glass-text-muted {
+    color: rgba(148, 163, 184, 0.85);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
   }
 }

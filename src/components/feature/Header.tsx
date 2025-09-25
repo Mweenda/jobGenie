@@ -123,29 +123,40 @@ export default function Header() {
                       initial={{ opacity: 0, scale: 0.95, y: -10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                      className="absolute right-0 mt-2 w-80 glass-floating rounded-lg z-50"
+                      className="absolute right-0 mt-3 w-96 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 z-50"
                     >
-                      <div className="p-4 border-b border-white/10">
-                        <h3 className="font-semibold">Notifications</h3>
+                      <div className="p-5 border-b border-gray-200/30">
+                        <h3 className="font-semibold text-gray-900 text-lg">Notifications</h3>
+                        <p className="text-gray-500 text-sm mt-1">{unreadCount} unread notifications</p>
                       </div>
-                      <div className="max-h-96 overflow-y-auto">
+                      <div className="max-h-80 overflow-y-auto">
                         {notifications.map((notification) => (
-                          <div key={notification.id} className={`p-4 border-b border-white/5 hover:glass-prominent transition-colors ${notification.unread ? 'bg-blue-500/5' : ''}`}>
+                          <div 
+                            key={notification.id} 
+                            className={`p-5 border-b border-gray-100/50 hover:bg-gray-50/80 transition-all duration-200 cursor-pointer ${
+                              notification.unread ? 'bg-blue-50/50 border-l-4 border-l-blue-500' : ''
+                            }`}
+                          >
                             <div className="flex justify-between items-start">
-                              <div className="flex-1">
-                                <h4 className="font-medium text-sm">{notification.title}</h4>
-                                <p className="text-muted-foreground text-sm mt-1">{notification.message}</p>
-                                <p className="text-muted-foreground text-xs mt-2">{notification.time}</p>
+                              <div className="flex-1 pr-3">
+                                <div className="flex items-center space-x-2">
+                                  <h4 className="font-semibold text-gray-900 text-sm">{notification.title}</h4>
+                                  {notification.unread && (
+                                    <div className="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
+                                  )}
+                                </div>
+                                <p className="text-gray-700 text-sm mt-2 leading-relaxed">{notification.message}</p>
+                                <p className="text-gray-500 text-xs mt-3 flex items-center">
+                                  <span className="inline-block w-1 h-1 bg-gray-400 rounded-full mr-2"></span>
+                                  {notification.time}
+                                </p>
                               </div>
-                              {notification.unread && (
-                                <div className="w-2 h-2 bg-blue-500 rounded-full ml-2 mt-1"></div>
-                              )}
                             </div>
                           </div>
                         ))}
                       </div>
-                      <div className="p-3 border-t border-white/10">
-                        <button className="text-blue-500 text-sm hover:text-blue-600 w-full text-center transition-colors">
+                      <div className="p-4 border-t border-gray-200/30 bg-gray-50/30">
+                        <button className="text-blue-600 font-medium text-sm hover:text-blue-700 w-full text-center transition-colors py-2 px-4 rounded-lg hover:bg-blue-50">
                           View all notifications
                         </button>
                       </div>

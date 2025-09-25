@@ -194,13 +194,13 @@ const MessageBubble: React.FC<{ message: any; isMe: boolean; delay: number }> = 
       transition={{ duration: 0.3, delay }}
       className={`flex mb-4 ${isMe ? "justify-end" : "justify-start"}`}
     >
-      <div
-        className={`max-w-[70%] rounded-2xl px-4 py-3 text-sm relative ${
-          isMe 
-            ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white glass-floating" 
-            : "glass-prominent"
-        }`}
-      >
+                <div
+                  className={`max-w-[85%] sm:max-w-[70%] rounded-2xl px-4 py-3 text-sm relative ${
+                    isMe 
+                      ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg" 
+                      : "glass-prominent"
+                  }`}
+                >
         <p className="leading-relaxed">{message.content}</p>
         <div className={`flex items-center justify-end mt-2 space-x-1 text-xs ${
           isMe ? "text-blue-100" : "text-muted-foreground"
@@ -269,9 +269,9 @@ const MessagesPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       <Header />
       
-      <div className="h-screen pt-16 sm:pt-20 flex">
+      <div className="h-screen pt-16 sm:pt-20 flex max-w-7xl mx-auto">
         {/* Conversations Sidebar */}
-        <div className={`w-full md:w-80 lg:w-96 flex flex-col ${
+        <div className={`w-full md:w-80 lg:w-96 xl:w-80 flex flex-col ${
           !showConversationList && "hidden md:flex"
         }`}>
           <div className="h-full p-2 sm:p-4">
@@ -332,10 +332,10 @@ const MessagesPage: React.FC = () => {
         </div>
 
         {/* Chat Area */}
-        <div className={`flex-1 flex flex-col ${
+        <div className={`flex-1 flex flex-col min-w-0 ${
           showConversationList && "hidden md:flex"
         }`}>
-          <div className="h-full p-4">
+          <div className="h-full p-2 sm:p-4">
             {selectedConversation ? (
               <GlassCard variant="floating" className="h-full flex flex-col">
                 {/* Chat Header */}
@@ -428,8 +428,8 @@ const MessagesPage: React.FC = () => {
                 </motion.div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4">
-                  <div className="space-y-2">
+                <div className="flex-1 overflow-y-auto p-3 sm:p-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {mockMessages.map((message, index) => (
                       <MessageBubble
                         key={message.id}
@@ -447,10 +447,10 @@ const MessagesPage: React.FC = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="p-4"
+                  className="p-3 sm:p-4"
                 >
                   <div className="glass-floating p-3 rounded-2xl">
-                    <div className="flex items-end space-x-3">
+                    <div className="flex items-end space-x-2 sm:space-x-3">
                       <FloatingButton variant="glass" size="sm" className="shrink-0">
                         <Paperclip className="w-4 h-4" />
                       </FloatingButton>
