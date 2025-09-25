@@ -30,7 +30,7 @@ if (import.meta.env.DEV) {
   
   try {
     // Connect to Firestore emulator
-    connectFirestoreEmulator(db, '127.0.0.1', 8080)
+    connectFirestoreEmulator(db, '127.0.0.1', 8081)
   } catch (error) {
     // Emulator already connected
   }

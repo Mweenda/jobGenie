@@ -8,7 +8,7 @@ import Input from '../base/Input'
 const initialMessages: ChatMessage[] = [
   {
     id: '1',
-    text: "Hi! I'm your JobGenie AI assistant. I can help you with job searching, resume tips, interview preparation, and career advice. What would you like to know?",
+    text: "👋 Hi! I'm your JobGenie AI assistant powered by advanced AI technology. I can help you with:\n\n🔍 Job search strategies\n📝 Resume optimization\n🎯 Interview preparation\n💰 Salary negotiation\n📈 Career development\n\nI provide personalized advice based on your profile and industry insights. What can I help you with today?",
     sender: 'bot',
     timestamp: new Date(),
     type: 'text'
@@ -135,9 +135,12 @@ export default function AIChatbot() {
       <div className="p-4 border-b bg-blue-600 text-white rounded-t-lg flex items-center justify-between">
         <div className="flex items-center">
           <Bot className="w-5 h-5 mr-2" />
-          <h3 className="font-semibold">AI Career Assistant</h3>
+          <h3 className="font-semibold">JobGenie AI</h3>
+          <span className="ml-2 text-xs bg-green-500 px-2 py-1 rounded-full">
+            AI-Powered
+          </span>
           {isAuthenticated && user && (
-            <span className="ml-2 text-xs bg-blue-500 px-2 py-1 rounded-full">
+            <span className="ml-1 text-xs bg-blue-500 px-2 py-1 rounded-full">
               Personalized
             </span>
           )}
@@ -190,13 +193,16 @@ export default function AIChatbot() {
             
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-gray-100 px-3 py-2 rounded-lg">
-                  <div className="flex items-center space-x-1">
-                    <Bot className="w-4 h-4" />
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                <div className="bg-gradient-to-r from-blue-50 to-green-50 px-3 py-2 rounded-lg border border-blue-100">
+                  <div className="flex items-center space-x-2">
+                    <Bot className="w-4 h-4 text-blue-600" />
+                    <div className="flex items-center space-x-1">
+                      <span className="text-sm text-blue-700 font-medium">AI is thinking</span>
+                      <div className="flex space-x-1">
+                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></div>
+                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      </div>
                     </div>
                   </div>
                 </div>

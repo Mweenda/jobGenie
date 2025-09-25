@@ -1,5 +1,6 @@
 import { JobService } from './jobService'
 import { AuthService } from './authService'
+import { geminiFlash } from '../lib/firebase'
 
 export interface ChatMessage {
   id: string
@@ -25,6 +26,13 @@ export class ChatbotService {
    */
   static async processMessage(userId: string, message: string): Promise<ChatMessage> {
     try {
+      // First try to get AI-powered response
+      const aiResponse = await this.getAIResponse(userId, message)
+      if (aiResponse) {
+        return aiResponse
+      }
+
+      // Fallback to intent-based responses
       const intent = this.analyzeIntent(message)
       
       switch (intent.type) {
@@ -44,6 +52,87 @@ export class ChatbotService {
     } catch (error) {
       console.error('Process message error:', error)
       return this.getErrorResponse()
+    }
+  }
+
+  /**
+   * Generate AI-powered response using Gemini
+   */
+  private static async getAIResponse(userId: string, message: string): Promise<ChatMessage | null> {
+    try {
+      // Get user context for personalized responses
+      let userContext = ""
+      try {
+        const user = await AuthService.getUserProfile(userId)
+        if (user) {
+          userContext = `User Context: ${user.displayName || 'User'} is a ${user.experienceLevel || 'professional'} level candidate interested in ${user.preferredJobTypes?.join(', ') || 'various'} roles. Location: ${user.location || 'Not specified'}. Skills: ${user.skills?.join(', ') || 'Not specified'}.`
+        }
+      } catch (error) {
+        console.log('Could not fetch user context:', error)
+      }
+
+      // Create a comprehensive prompt for the AI
+      const prompt = `You are JobGenie AI, an expert career assistant and job search coach. You help professionals with job searching, career advice, resume optimization, interview preparation, salary negotiation, and professional development.
+
+${userContext}
+
+User Message: "${message}"
+
+Instructions:
+- Provide helpful, actionable career advice
+- Be encouraging and professional
+- Keep responses concise but informative (max 200 words)
+- Use relevant emojis sparingly for visual appeal
+- Focus on practical steps the user can take
+- If asked about specific jobs, suggest they use the job search features
+- For technical questions, provide accurate industry insights
+- Always maintain a supportive, expert tone
+
+Respond as JobGenie AI:`
+
+      const result = await geminiFlash.generateContent(prompt)
+      const response = result.response
+      const text = response.text()
+
+      if (text && text.trim()) {
+        return {
+          id: this.generateId(),
+          text: text.trim(),
+          sender: 'bot',
+          timestamp: new Date(),
+          type: 'text'
+        }
+      }
+
+      return null
+    } catch (error) {
+      console.error('AI response error:', error)
+      
+      // Handle specific API errors
+      if (error instanceof Error) {
+        if (error.message.includes('quota') || error.message.includes('limit')) {
+          return {
+            id: this.generateId(),
+            text: "🚀 I'm currently experiencing high demand! While my AI brain reboots, I can still help you with career advice using my built-in expertise. What would you like to know about job searching or career development?",
+            sender: 'bot',
+            timestamp: new Date(),
+            type: 'text'
+          }
+        }
+        
+        if (error.message.includes('API key') || error.message.includes('authentication')) {
+          return {
+            id: this.generateId(),
+            text: "🔑 I'm having authentication issues with my AI services, but I'm still your career expert! I can help with job search strategies, resume tips, interview prep, and more. What can I assist you with?",
+            sender: 'bot',
+            timestamp: new Date(),
+            type: 'text'
+          }
+        }
+      }
+      
+      // Return null to fall back to intent-based responses for other errors
+      return null
     }
   }
 
@@ -280,9 +369,15 @@ export class ChatbotService {
    * Get error response
    */
   private static getErrorResponse(): ChatMessage {
+    const errorResponses = [
+      "🤖 I apologize, but I'm experiencing some technical difficulties right now. Let me try to help you with some general career advice instead! What specific area would you like guidance on?",
+      "⚡ My AI systems are having a brief hiccup, but I'm still here to help! I can assist with job search strategies, resume tips, or interview preparation. What interests you most?",
+      "🔧 I'm encountering a temporary issue, but don't worry! I have plenty of career expertise to share. Would you like advice on networking, skill development, or career planning?",
+    ]
+    
     return {
       id: this.generateId(),
-      text: "I apologize, but I'm having trouble processing your request right now. Please try again, or feel free to ask me about job searching, resume tips, or career advice!",
+      text: errorResponses[Math.floor(Math.random() * errorResponses.length)],
       sender: 'bot',
       timestamp: new Date(),
       type: 'text'
