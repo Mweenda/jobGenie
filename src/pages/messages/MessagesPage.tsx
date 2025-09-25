@@ -340,7 +340,8 @@ const MessagesPage: React.FC = () => {
                       <p className="text-muted-foreground">No conversations found</p>
                     </motion.div>
                   )}
-                </AnimatePresence>
+                  </AnimatePresence>
+                </div>
               </div>
             </GlassCard>
           </div>

@@ -238,66 +238,155 @@ export default function Header() {
                   )}
                 </div>
 
-                {/* User Dropdown */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex items-center space-x-2 p-2 rounded-lg glass-subtle hover:glass-prominent transition-all duration-200"
-                    >
-                      <Avatar className="w-8 h-8">
-                        <AvatarFallback className="bg-blue-600 text-white text-sm">
-                          {user.firstName?.[0] || user.email?.[0] || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="hidden md:block text-sm font-medium">
-                        {user.firstName || user.email?.split('@')[0] || 'User'}
-                      </span>
-                    </motion.button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 glass-floating border-white/10">
-                    <div className="flex items-center justify-start gap-2 p-2">
-                      <Avatar className="w-8 h-8">
-                        <AvatarFallback className="bg-blue-600 text-white text-sm">
-                          {user.firstName?.[0] || user.email?.[0] || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium">
-                          {user.firstName && user.lastName
-                            ? `${user.firstName} ${user.lastName}`
-                            : user.firstName || 'User'}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {user.email}
-                        </p>
-                      </div>
-                    </div>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => navigate('/profile')}>
-                      <User className="mr-2 h-4 w-4" />
-                      Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/saved')}>
-                      <Bookmark className="mr-2 h-4 w-4" />
-                      Saved Jobs
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/messages')}>
-                      <MessageSquare className="mr-2 h-4 w-4" />
-                      Messages
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/settings')}>
-                      <Settings className="mr-2 h-4 w-4" />
-                      Settings
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Sign Out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                {/* User Dropdown - Hamburger Menu Style */}
+                <div className="relative" ref={userDropdownRef}>
+                  <motion.button
+                    onClick={() => setShowUserDropdown(!showUserDropdown)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`flex items-center space-x-3 p-3 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
+                      showUserDropdown 
+                        ? 'bg-blue-500/20 text-blue-600 dark:text-blue-400 shadow-lg border border-blue-500/30' 
+                        : 'glass-subtle hover:glass-prominent hover:shadow-md'
+                    }`}
+                    aria-expanded={showUserDropdown}
+                    aria-controls="user-menu"
+                    aria-label={showUserDropdown ? 'Close user menu' : 'Open user menu'}
+                  >
+                    <Avatar className="w-8 h-8">
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-sm font-semibold">
+                        {user.firstName?.[0] || user.email?.[0] || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="hidden md:block text-sm font-medium">
+                      {user.firstName || user.email?.split('@')[0] || 'User'}
+                    </span>
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${
+                      showUserDropdown ? 'rotate-180' : ''
+                    }`} />
+                  </motion.button>
+
+                  {/* User Menu Dropdown */}
+                  <AnimatePresence>
+                    {showUserDropdown && (
+                      <motion.div
+                        id="user-menu"
+                        initial={{ 
+                          opacity: 0, 
+                          scale: 0.95,
+                          x: 10,
+                          y: -5 
+                        }}
+                        animate={{ 
+                          opacity: 1, 
+                          scale: 1,
+                          x: 0,
+                          y: 0 
+                        }}
+                        exit={{ 
+                          opacity: 0, 
+                          scale: 0.95,
+                          x: 10,
+                          y: -5 
+                        }}
+                        transition={{ 
+                          duration: 0.25,
+                          ease: "easeOut",
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 30
+                        }}
+                        className="absolute top-full right-0 mt-2 z-[60] w-[280px]"
+                      >
+                        <GlassCard 
+                          variant="floating" 
+                          className="w-full p-3 shadow-2xl border border-white/30 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl"
+                        >
+                          {/* User Info Header */}
+                          <div className="p-3 mb-2 bg-gradient-to-r from-blue-50/50 to-purple-50/50 rounded-xl border border-blue-100/50">
+                            <div className="flex items-center space-x-3">
+                              <Avatar className="w-10 h-10">
+                                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+                                  {user.firstName?.[0] || user.email?.[0] || 'U'}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-semibold text-gray-900 truncate">
+                                  {user.firstName && user.lastName
+                                    ? `${user.firstName} ${user.lastName}`
+                                    : user.firstName || 'User'}
+                                </p>
+                                <p className="text-xs text-gray-600 truncate">
+                                  {user.email}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Menu Options */}
+                          <div className="space-y-1">
+                            {userMenuOptions.map((option, index) => {
+                              const IconComponent = option.icon
+                              const isActive = isActivePath(option.path)
+                              
+                              return (
+                                <motion.button
+                                  key={option.id}
+                                  initial={{ opacity: 0, x: -20 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ 
+                                    duration: 0.2, 
+                                    delay: index * 0.05 
+                                  }}
+                                  onClick={() => handleUserMenuClick(option.path)}
+                                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 font-medium ${
+                                    isActive
+                                      ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-600 dark:text-blue-400 shadow-lg border border-blue-500/30'
+                                      : 'text-gray-700 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-white/10 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md'
+                                  }`}
+                                  whileHover={{ x: 6, scale: 1.02 }}
+                                  whileTap={{ scale: 0.98 }}
+                                >
+                                  <IconComponent className={`w-4 h-4 ${
+                                    isActive ? 'text-blue-600 dark:text-blue-400' : ''
+                                  }`} />
+                                  <span className="font-medium text-sm">{option.label}</span>
+                                  {isActive && (
+                                    <motion.div
+                                      layoutId="activeUserIndicator"
+                                      className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-500"
+                                      transition={{ duration: 0.2 }}
+                                    />
+                                  )}
+                                </motion.button>
+                              )
+                            })}
+                            
+                            {/* Separator */}
+                            <div className="my-2 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+                            
+                            {/* Sign Out */}
+                            <motion.button
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ 
+                                duration: 0.2, 
+                                delay: userMenuOptions.length * 0.05 
+                              }}
+                              onClick={handleSignOut}
+                              className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 hover:shadow-md"
+                              whileHover={{ x: 6, scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                            >
+                              <LogOut className="w-4 h-4" />
+                              <span className="font-medium text-sm">Sign Out</span>
+                            </motion.button>
+                          </div>
+                        </GlassCard>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </>
             ) : (
               <div className="flex items-center space-x-3">
@@ -326,6 +415,12 @@ export default function Header() {
         <div 
           className="fixed inset-0 z-30" 
           onClick={() => setShowNotifications(false)}
+        />
+      )}
+      {showUserDropdown && (
+        <div 
+          className="fixed inset-0 z-30" 
+          onClick={() => setShowUserDropdown(false)}
         />
       )}
     </motion.header>
