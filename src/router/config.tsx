@@ -18,6 +18,7 @@ export function AppRouter() {
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/ai-demo" element={<AIDemoPage />} />
+      <Route path="/test-gemini" element={<GeminiAPITest />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )

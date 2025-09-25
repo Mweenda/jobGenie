@@ -8,7 +8,7 @@ import Input from '../base/Input'
 const initialMessages: ChatMessage[] = [
   {
     id: '1',
-    text: "👋 Hi! I'm your JobGenie AI assistant powered by advanced AI technology. I can help you with:\n\n🔍 Job search strategies\n📝 Resume optimization\n🎯 Interview preparation\n💰 Salary negotiation\n📈 Career development\n\nI provide personalized advice based on your profile and industry insights. What can I help you with today?",
+    text: "👋 Hi! I'm your JobGenie AI assistant. I can help you with:\n\n🔍 Job search strategies\n📝 Resume optimization\n🎯 Interview preparation\n💰 Salary negotiation\n📈 Career development\n\nWhat can I help you with today?",
     sender: 'bot',
     timestamp: new Date(),
     type: 'text'
@@ -48,13 +48,18 @@ export default function AIChatbot() {
     setInputValue('')
     setIsTyping(true)
 
+    console.log('💬 ChatBot UI: Processing user message:', currentInput)
+
     try {
       let botResponse: ChatMessage
       
       if (isAuthenticated && user) {
+        console.log('👤 ChatBot UI: User authenticated, calling ChatBot service...')
         // Use real chatbot service
         botResponse = await ChatbotService.processMessage(user.id, currentInput)
+        console.log('🤖 ChatBot UI: Received response:', botResponse.text.substring(0, 50) + '...')
       } else {
+        console.log('🔒 ChatBot UI: User not authenticated, using fallback response')
         // Fallback for non-authenticated users
         botResponse = {
           id: Date.now().toString(),
@@ -67,7 +72,7 @@ export default function AIChatbot() {
       
       setMessages(prev => [...prev, botResponse])
     } catch (error) {
-      console.error('Error getting bot response:', error)
+      console.error('❌ ChatBot UI: Error getting bot response:', error)
       const errorResponse: ChatMessage = {
         id: Date.now().toString(),
         text: "I apologize, but I'm having trouble processing your request right now. Please try again!",
@@ -120,41 +125,47 @@ export default function AIChatbot() {
     return (
       <button
         onClick={() => setIsVisible(true)}
-        className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors z-50"
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 z-50 hover:scale-110"
       >
-        <Bot className="w-6 h-6" />
+        <Bot className="w-7 h-7" />
       </button>
     )
   }
 
   return (
-    <div className={`fixed bottom-4 right-4 bg-white rounded-lg shadow-xl border flex flex-col z-50 transition-all duration-300 ${
-      isMinimized ? 'w-80 h-16' : 'w-96 h-96'
+    <div className={`fixed bottom-6 right-6 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 flex flex-col z-50 transition-all duration-300 ${
+      isMinimized ? 'w-80 h-16' : 'w-[420px] h-[600px]'
     }`}>
       {/* Header */}
-      <div className="p-4 border-b bg-blue-600 text-white rounded-t-lg flex items-center justify-between">
-        <div className="flex items-center">
-          <Bot className="w-5 h-5 mr-2" />
-          <h3 className="font-semibold">JobGenie AI</h3>
-          <span className="ml-2 text-xs bg-green-500 px-2 py-1 rounded-full">
-            AI-Powered
-          </span>
-          {isAuthenticated && user && (
-            <span className="ml-1 text-xs bg-blue-500 px-2 py-1 rounded-full">
-              Personalized
-            </span>
-          )}
+      <div className="p-5 border-b border-white/10 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-2xl flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+            <Bot className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-lg">JobGenie AI</h3>
+            <div className="flex items-center space-x-2 mt-1">
+              <span className="text-xs bg-green-500/80 px-2 py-0.5 rounded-full backdrop-blur-sm">
+                AI-Powered
+              </span>
+              {isAuthenticated && user && (
+                <span className="text-xs bg-purple-500/80 px-2 py-0.5 rounded-full backdrop-blur-sm">
+                  Personalized
+                </span>
+              )}
+            </div>
+          </div>
         </div>
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-2">
           <button
             onClick={() => setIsMinimized(!isMinimized)}
-            className="p-1 hover:bg-blue-500 rounded"
+            className="p-2 hover:bg-white/20 rounded-lg transition-colors"
           >
             {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
           </button>
           <button
             onClick={() => setIsVisible(false)}
-            className="p-1 hover:bg-blue-500 rounded"
+            className="p-2 hover:bg-white/20 rounded-lg transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -164,25 +175,37 @@ export default function AIChatbot() {
       {!isMinimized && (
         <>
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div className="flex-1 overflow-y-auto p-6 space-y-4">
             {messages.map((message) => (
               <div
                 key={message.id}
                 className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-xs px-3 py-2 rounded-lg ${
+                  className={`max-w-[280px] px-4 py-3 rounded-2xl ${
                     message.sender === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-900'
+                      ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg'
+                      : 'bg-gray-50 text-gray-900 border border-gray-200 shadow-sm'
                   }`}
                 >
-                  <div className="flex items-start space-x-2">
-                    {message.sender === 'bot' && <Bot className="w-4 h-4 mt-0.5 flex-shrink-0" />}
-                    {message.sender === 'user' && <User className="w-4 h-4 mt-0.5 flex-shrink-0" />}
-                    <div className="flex-1">
-                      {renderMessage(message)}
-                      <div className="text-xs opacity-70 mt-1">
+                  <div className="flex items-start space-x-3">
+                    {message.sender === 'bot' && (
+                      <div className="p-1.5 bg-blue-100 rounded-full flex-shrink-0 mt-0.5">
+                        <Bot className="w-3.5 h-3.5 text-blue-600" />
+                      </div>
+                    )}
+                    {message.sender === 'user' && (
+                      <div className="p-1.5 bg-white/20 rounded-full flex-shrink-0 mt-0.5">
+                        <User className="w-3.5 h-3.5 text-white" />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm leading-relaxed">
+                        {renderMessage(message)}
+                      </div>
+                      <div className={`text-xs mt-2 ${
+                        message.sender === 'user' ? 'text-blue-100' : 'text-gray-500'
+                      }`}>
                         {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </div>
@@ -193,15 +216,17 @@ export default function AIChatbot() {
             
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-gradient-to-r from-blue-50 to-green-50 px-3 py-2 rounded-lg border border-blue-100">
-                  <div className="flex items-center space-x-2">
-                    <Bot className="w-4 h-4 text-blue-600" />
-                    <div className="flex items-center space-x-1">
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-3 rounded-2xl border border-blue-100 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-1.5 bg-blue-100 rounded-full">
+                      <Bot className="w-3.5 h-3.5 text-blue-600" />
+                    </div>
+                    <div className="flex items-center space-x-2">
                       <span className="text-sm text-blue-700 font-medium">AI is thinking</span>
                       <div className="flex space-x-1">
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></div>
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                       </div>
                     </div>
                   </div>
@@ -212,27 +237,30 @@ export default function AIChatbot() {
           </div>
           
           {/* Input */}
-          <div className="p-4 border-t">
-            <div className="flex space-x-2">
-              <Input
-                placeholder={isAuthenticated ? "Ask me anything..." : "Sign in for personalized help..."}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyPress}
-                className="flex-1"
-                disabled={isTyping}
-              />
+          <div className="p-5 border-t border-gray-100 bg-gray-50/50">
+            <div className="flex space-x-3">
+              <div className="flex-1 relative">
+                <Input
+                  placeholder={isAuthenticated ? "Ask me anything about your career..." : "Sign in for personalized help..."}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyPress}
+                  className="w-full pl-4 pr-12 py-3 rounded-xl border border-gray-200 bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                  disabled={isTyping}
+                />
+              </div>
               <Button 
                 onClick={handleSendMessage} 
                 size="sm"
                 disabled={!inputValue.trim() || isTyping}
+                className="px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-4 h-4" />
               </Button>
             </div>
             {!isAuthenticated && (
-              <p className="text-xs text-gray-500 mt-2 text-center">
-                Sign in to get personalized job recommendations and career advice
+              <p className="text-xs text-gray-500 mt-3 text-center leading-relaxed">
+                💡 Sign in to get personalized job recommendations and career advice
               </p>
             )}
           </div>

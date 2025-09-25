@@ -59,13 +59,23 @@ export class ChatbotService {
    * Generate AI-powered response using Gemini
    */
   private static async getAIResponse(userId: string, message: string): Promise<ChatMessage | null> {
+    console.log('🤖 ChatBot: Attempting to get AI response for message:', message)
+    
     try {
+      // Check if Gemini API key is available
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY
+      if (!apiKey || apiKey === 'demo-gemini-key-get-real-key-from-google-ai-studio') {
+        console.log('⚠️ ChatBot: No valid Gemini API key found, falling back to intent-based responses')
+        return null
+      }
+
       // Get user context for personalized responses
       let userContext = ""
       try {
         const user = await AuthService.getUserProfile(userId)
         if (user) {
           userContext = `User Context: ${user.displayName || 'User'} is a ${user.experienceLevel || 'professional'} level candidate interested in ${user.preferredJobTypes?.join(', ') || 'various'} roles. Location: ${user.location || 'Not specified'}. Skills: ${user.skills?.join(', ') || 'Not specified'}.`
+          console.log('👤 ChatBot: User context loaded:', userContext)
         }
       } catch (error) {
         console.log('Could not fetch user context:', error)
@@ -90,9 +100,12 @@ Instructions:
 
 Respond as JobGenie AI:`
 
+      console.log('🚀 ChatBot: Sending request to Gemini API...')
       const result = await geminiFlash.generateContent(prompt)
       const response = result.response
       const text = response.text()
+
+      console.log('✅ ChatBot: Received response from Gemini API:', text.substring(0, 100) + '...')
 
       if (text && text.trim()) {
         return {
@@ -104,6 +117,7 @@ Respond as JobGenie AI:`
         }
       }
 
+      console.log('⚠️ ChatBot: Empty response from Gemini API')
       return null
     } catch (error) {
       console.error('AI response error:', error)
