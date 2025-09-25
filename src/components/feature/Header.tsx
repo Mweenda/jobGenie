@@ -1,27 +1,101 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Link, useNavigate } from 'react-router-dom'
-import { Search, Bell, User, Settings, LogOut, Sparkles, Bookmark, MessageSquare } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Search, Bell, User, Settings, LogOut, Sparkles, Bookmark, MessageSquare, ChevronDown } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { Input } from '../ui/input'
 import { Avatar, AvatarFallback } from '../ui/avatar'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '../ui/dropdown-menu'
+import { GlassCard } from '../ui/glass-card'
 import { FloatingButton } from '../ui/floating-button'
 import { HamburgerMenu } from '../ui/hamburger-menu'
 
 export default function Header() {
   const { user, isAuthenticated, isLoading, signOut } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [showNotifications, setShowNotifications] = useState(false)
+  const [showUserDropdown, setShowUserDropdown] = useState(false)
+  const userDropdownRef = useRef<HTMLDivElement>(null)
+
+  // Handle click outside for user dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+        setShowUserDropdown(false)
+      }
+    }
+
+    if (showUserDropdown) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showUserDropdown])
+
+  // Close dropdown on escape key
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowUserDropdown(false)
+      }
+    }
+
+    if (showUserDropdown) {
+      document.addEventListener('keydown', handleEscape)
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [showUserDropdown])
 
   const handleSignOut = async () => {
     try {
       await signOut()
       navigate('/')
+      setShowUserDropdown(false)
     } catch (error) {
       console.error('Sign out error:', error)
     }
   }
+
+  const handleUserMenuClick = (path: string) => {
+    navigate(path)
+    setShowUserDropdown(false)
+  }
+
+  const isActivePath = (path: string) => {
+    return location.pathname === path
+  }
+
+  const userMenuOptions = [
+    {
+      id: 'profile',
+      label: 'Profile',
+      path: '/profile',
+      icon: User
+    },
+    {
+      id: 'saved',
+      label: 'Saved Jobs',
+      path: '/saved',
+      icon: Bookmark
+    },
+    {
+      id: 'messages',
+      label: 'Messages',
+      path: '/messages',
+      icon: MessageSquare
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      path: '/settings',
+      icon: Settings
+    }
+  ]
 
   const notifications = [
     {
