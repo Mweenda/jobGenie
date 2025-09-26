@@ -74,7 +74,8 @@ export class ChatbotService {
       try {
         const user = await AuthService.getUserProfile(userId)
         if (user) {
-          userContext = `User Context: ${user.displayName || 'User'} is a ${user.experienceLevel || 'professional'} level candidate interested in ${user.preferredJobTypes?.join(', ') || 'various'} roles. Location: ${user.location || 'Not specified'}. Skills: ${user.skills?.join(', ') || 'Not specified'}.`
+          const displayName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || 'User'
+          userContext = `User Context: ${displayName} is a ${user.experienceLevel || 'professional'} level candidate with the job title: ${user.jobTitle || 'Not specified'}.`
           console.log('👤 ChatBot: User context loaded:', userContext)
         }
       } catch (error) {
