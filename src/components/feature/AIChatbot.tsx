@@ -97,13 +97,13 @@ export default function AIChatbot() {
     if (message.type === 'job_recommendations' && message.data) {
       return (
         <div className="space-y-2">
-          <p className="text-sm">{message.text}</p>
+          <p className="text-sm text-adaptive">{message.text}</p>
           <div className="space-y-2">
             {message.data.slice(0, 3).map((job: any) => (
-              <div key={job.id} className="bg-blue-50 rounded-lg p-3 text-sm">
-                <div className="font-medium text-blue-900">{job.title}</div>
-                <div className="text-blue-700">{job.company.name}</div>
-                <div className="text-blue-600 text-xs mt-1">
+              <div key={job.id} className="glass-subtle rounded-xl p-3 text-sm">
+                <div className="font-medium text-adaptive">{job.title}</div>
+                <div className="text-adaptive-secondary">{job.company.name}</div>
+                <div className="text-adaptive-muted text-xs mt-1">
                   {job.location} • {job.salaryMin && job.salaryMax ? `$${job.salaryMin/1000}k-$${job.salaryMax/1000}k` : 'Salary not specified'}
                   {job.matchScore && (
                     <span className="ml-2 bg-green-100 text-green-800 px-1 py-0.5 rounded">
@@ -118,7 +118,7 @@ export default function AIChatbot() {
       )
     }
 
-    return <p className="text-sm whitespace-pre-wrap">{message.text}</p>
+    return <p className="text-sm whitespace-pre-wrap text-adaptive">{message.text}</p>
   }
 
   if (!isVisible) {

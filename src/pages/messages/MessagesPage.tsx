@@ -205,9 +205,9 @@ const MessageBubble: React.FC<{ message: any; isMe: boolean; delay: number }> = 
                       : "glass-prominent"
                   }`}
                 >
-        <p className="leading-relaxed">{message.content}</p>
+        <p className={`leading-relaxed ${isMe ? "text-white" : "text-adaptive"}`}>{message.content}</p>
         <div className={`flex items-center justify-end mt-2 space-x-1 text-xs ${
-          isMe ? "text-blue-100" : "text-muted-foreground"
+          isMe ? "text-blue-100" : "text-adaptive-muted"
         }`}>
           <span>{message.timestamp}</span>
           {isMe && (

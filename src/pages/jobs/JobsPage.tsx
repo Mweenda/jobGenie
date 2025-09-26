@@ -160,8 +160,8 @@ const JobsPage: React.FC = () => {
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-4 sm:space-y-0">
             <div className="text-center sm:text-left">
-              <h1 className="text-2xl sm:text-display-lg mb-2">Find Your Dream Job</h1>
-              <p className="text-base sm:text-body-lg text-muted-foreground">Discover amazing opportunities with AI-powered matching</p>
+              <h1 className="text-2xl sm:text-display-lg mb-2 text-adaptive">Find Your Dream Job</h1>
+              <p className="text-base sm:text-body-lg text-adaptive-secondary">Discover amazing opportunities with AI-powered matching</p>
             </div>
             
             <FloatingButton
