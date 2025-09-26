@@ -94,7 +94,7 @@ const SettingsPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       <Header />
       
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 pt-20 sm:pt-24">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8 pt-20 sm:pt-24">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -102,11 +102,11 @@ const SettingsPage: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="mb-6 sm:mb-8 text-center sm:text-left"
         >
-          <h1 className="text-xl sm:text-display-lg mb-2 flex items-center justify-center sm:justify-start space-x-2 sm:space-x-3">
+          <h1 className="text-xl sm:text-display-lg mb-2 flex items-center justify-center sm:justify-start space-x-2 sm:space-x-3 text-adaptive">
             <SettingsIcon className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500" />
             <span>Settings</span>
           </h1>
-          <p className="text-sm sm:text-body-lg text-muted-foreground">
+          <p className="text-sm sm:text-body-lg text-adaptive-secondary">
             Manage your account settings and preferences
           </p>
         </motion.div>
@@ -151,11 +151,11 @@ const SettingsPage: React.FC = () => {
               >
                 <GlassCard variant="floating" className="p-6">
                   <div className="mb-6">
-                    <h2 className="text-display-sm flex items-center space-x-2 mb-2">
+                    <h2 className="text-display-sm flex items-center space-x-2 mb-2 text-adaptive">
                       <User className="w-5 h-5 text-blue-500" />
                       <span>Profile Information</span>
                     </h2>
-                    <p className="text-muted-foreground">
+                    <p className="text-adaptive-secondary">
                       Update your personal information and profile details
                     </p>
                   </div>
@@ -180,7 +180,7 @@ const SettingsPage: React.FC = () => {
                       <div className="flex-1 space-y-4 w-full">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <Label htmlFor="name" className="flex items-center space-x-2 mb-2">
+                            <Label htmlFor="name" className="flex items-center space-x-2 mb-2 text-adaptive font-medium">
                               <User className="w-4 h-4 text-blue-500" />
                               <span>Full Name</span>
                             </Label>
@@ -192,7 +192,7 @@ const SettingsPage: React.FC = () => {
                             />
                           </div>
                           <div>
-                            <Label htmlFor="jobTitle" className="flex items-center space-x-2 mb-2">
+                            <Label htmlFor="jobTitle" className="flex items-center space-x-2 mb-2 text-adaptive font-medium">
                               <Briefcase className="w-4 h-4 text-purple-500" />
                               <span>Job Title</span>
                             </Label>
@@ -205,7 +205,7 @@ const SettingsPage: React.FC = () => {
                           </div>
                         </div>
                         <div>
-                          <Label htmlFor="bio" className="flex items-center space-x-2 mb-2">
+                          <Label htmlFor="bio" className="flex items-center space-x-2 mb-2 text-adaptive font-medium">
                             <Sparkles className="w-4 h-4 text-green-500" />
                             <span>Bio</span>
                           </Label>
@@ -224,13 +224,13 @@ const SettingsPage: React.FC = () => {
 
                     {/* Contact Information */}
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold flex items-center space-x-2">
+                      <h3 className="text-lg font-semibold flex items-center space-x-2 text-adaptive">
                         <Mail className="w-5 h-5 text-blue-500" />
                         <span>Contact Information</span>
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="email" className="flex items-center space-x-2 mb-2">
+                          <Label htmlFor="email" className="flex items-center space-x-2 mb-2 text-adaptive font-medium">
                             <Mail className="w-4 h-4 text-blue-500" />
                             <span>Email Address</span>
                           </Label>
@@ -243,7 +243,7 @@ const SettingsPage: React.FC = () => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="phone" className="flex items-center space-x-2 mb-2">
+                          <Label htmlFor="phone" className="flex items-center space-x-2 mb-2 text-adaptive font-medium">
                             <Phone className="w-4 h-4 text-green-500" />
                             <span>Phone Number</span>
                           </Label>
@@ -255,7 +255,7 @@ const SettingsPage: React.FC = () => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="location" className="flex items-center space-x-2 mb-2">
+                          <Label htmlFor="location" className="flex items-center space-x-2 mb-2 text-adaptive font-medium">
                             <MapPin className="w-4 h-4 text-red-500" />
                             <span>Location</span>
                           </Label>
@@ -267,7 +267,7 @@ const SettingsPage: React.FC = () => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="company" className="flex items-center space-x-2 mb-2">
+                          <Label htmlFor="company" className="flex items-center space-x-2 mb-2 text-adaptive font-medium">
                             <Briefcase className="w-4 h-4 text-purple-500" />
                             <span>Current Company</span>
                           </Label>
@@ -285,13 +285,13 @@ const SettingsPage: React.FC = () => {
 
                     {/* Password Section */}
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold flex items-center space-x-2">
+                      <h3 className="text-lg font-semibold flex items-center space-x-2 text-adaptive">
                         <Shield className="w-5 h-5 text-red-500" />
                         <span>Password & Security</span>
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="currentPassword" className="flex items-center space-x-2 mb-2">
+                          <Label htmlFor="currentPassword" className="flex items-center space-x-2 mb-2 text-adaptive font-medium">
                             <Lock className="w-4 h-4 text-red-500" />
                             <span>Current Password</span>
                           </Label>
@@ -314,7 +314,7 @@ const SettingsPage: React.FC = () => {
                           </div>
                         </div>
                         <div>
-                          <Label htmlFor="newPassword" className="flex items-center space-x-2 mb-2">
+                          <Label htmlFor="newPassword" className="flex items-center space-x-2 mb-2 text-adaptive font-medium">
                             <Lock className="w-4 h-4 text-green-500" />
                             <span>New Password</span>
                           </Label>
@@ -351,11 +351,11 @@ const SettingsPage: React.FC = () => {
               >
                 <GlassCard variant="floating" className="p-6">
                   <div className="mb-6">
-                    <h2 className="text-xl font-semibold flex items-center space-x-2 mb-2">
+                    <h2 className="text-xl font-semibold flex items-center space-x-2 mb-2 text-adaptive">
                       <Bell className="w-5 h-5 text-blue-500" />
                       <span>Notification Preferences</span>
                     </h2>
-                    <p className="text-muted-foreground">
+                    <p className="text-adaptive-secondary">
                       Choose what notifications you want to receive
                     </p>
                   </div>
@@ -383,8 +383,8 @@ const SettingsPage: React.FC = () => {
                                 <IconComponent className="w-4 h-4" />
                               </div>
                               <div className="space-y-1">
-                                <h4 className="font-medium">{item.label}</h4>
-                                <p className="text-sm text-muted-foreground">{item.description}</p>
+                                <h4 className="font-medium text-adaptive">{item.label}</h4>
+                                <p className="text-sm text-adaptive-muted">{item.description}</p>
                               </div>
                             </div>
                             <Switch
@@ -400,21 +400,21 @@ const SettingsPage: React.FC = () => {
                     <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-6" />
 
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold flex items-center space-x-2">
+                      <h3 className="text-lg font-semibold flex items-center space-x-2 text-adaptive">
                         <Globe className="w-5 h-5 text-blue-500" />
                         <span>Delivery Method</span>
                       </h3>
                       <div className="space-y-3">
                         <div className="flex items-center space-x-3 p-3 glass-subtle rounded-lg">
                           <input type="radio" id="email-delivery" name="delivery" defaultChecked className="text-blue-500" />
-                          <Label htmlFor="email-delivery" className="flex items-center space-x-2 cursor-pointer">
+                          <Label htmlFor="email-delivery" className="flex items-center space-x-2 cursor-pointer text-adaptive">
                             <Mail className="w-4 h-4 text-blue-500" />
                             <span>Email</span>
                           </Label>
                         </div>
                         <div className="flex items-center space-x-3 p-3 glass-subtle rounded-lg">
                           <input type="radio" id="sms-delivery" name="delivery" className="text-blue-500" />
-                          <Label htmlFor="sms-delivery" className="flex items-center space-x-2 cursor-pointer">
+                          <Label htmlFor="sms-delivery" className="flex items-center space-x-2 cursor-pointer text-adaptive">
                             <Phone className="w-4 h-4 text-green-500" />
                             <span>SMS</span>
                           </Label>
@@ -442,11 +442,11 @@ const SettingsPage: React.FC = () => {
               >
                 <GlassCard variant="floating" className="p-6">
                   <div className="mb-6">
-                    <h2 className="text-xl font-semibold flex items-center space-x-2 mb-2">
+                    <h2 className="text-xl font-semibold flex items-center space-x-2 mb-2 text-adaptive">
                       <Shield className="w-5 h-5 text-red-500" />
                       <span>Privacy & Visibility</span>
                     </h2>
-                    <p className="text-muted-foreground">
+                    <p className="text-adaptive-secondary">
                       Control who can see your profile and contact you
                     </p>
                   </div>
@@ -473,8 +473,8 @@ const SettingsPage: React.FC = () => {
                                 <IconComponent className="w-4 h-4" />
                               </div>
                               <div className="space-y-1">
-                                <h4 className="font-medium">{item.label}</h4>
-                                <p className="text-sm text-muted-foreground">{item.description}</p>
+                                <h4 className="font-medium text-adaptive">{item.label}</h4>
+                                <p className="text-sm text-adaptive-muted">{item.description}</p>
                               </div>
                             </div>
                             <Switch
@@ -490,7 +490,7 @@ const SettingsPage: React.FC = () => {
                     <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-6" />
 
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold flex items-center space-x-2">
+                      <h3 className="text-lg font-semibold flex items-center space-x-2 text-adaptive">
                         <Shield className="w-5 h-5 text-red-500" />
                         <span>Data & Privacy</span>
                       </h3>
@@ -526,26 +526,26 @@ const SettingsPage: React.FC = () => {
               >
                 <GlassCard variant="floating" className="p-6">
                   <div className="mb-6">
-                    <h2 className="text-xl font-semibold flex items-center space-x-2 mb-2">
+                    <h2 className="text-xl font-semibold flex items-center space-x-2 mb-2 text-adaptive">
                       <CreditCard className="w-5 h-5 text-blue-500" />
                       <span>Billing & Subscription</span>
                     </h2>
-                    <p className="text-muted-foreground">
+                    <p className="text-adaptive-secondary">
                       Manage your subscription and billing information
                     </p>
                   </div>
 
                   <div className="space-y-6">
                 {/* Current Plan */}
-                <div className="p-4 border rounded-lg bg-primary/5">
+                <div className="p-4 glass-subtle rounded-xl">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-semibold text-lg">Current Plan</h3>
+                      <h3 className="font-semibold text-lg text-adaptive">Current Plan</h3>
                       <div className="flex items-center space-x-2 mt-1">
                         <Badge variant="default">{user.plan}</Badge>
-                        <span className="text-sm text-muted-foreground">$29/month</span>
+                        <span className="text-sm text-adaptive-secondary">$29/month</span>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-2">
+                      <p className="text-sm text-adaptive-muted mt-2">
                         Member since {user.joinDate}
                       </p>
                     </div>
@@ -557,22 +557,22 @@ const SettingsPage: React.FC = () => {
 
                 {/* Usage */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Usage This Month</h3>
+                  <h3 className="text-lg font-semibold text-adaptive">Usage This Month</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="p-4 border rounded-lg text-center">
-                      <div className="text-2xl font-bold text-primary">24</div>
-                      <div className="text-sm text-muted-foreground">Job Applications</div>
-                      <div className="text-xs text-muted-foreground mt-1">of 50 limit</div>
+                    <div className="p-4 glass-subtle rounded-xl text-center">
+                      <div className="text-2xl font-bold text-blue-500">24</div>
+                      <div className="text-sm text-adaptive-secondary">Job Applications</div>
+                      <div className="text-xs text-adaptive-muted mt-1">of 50 limit</div>
                     </div>
-                    <div className="p-4 border rounded-lg text-center">
-                      <div className="text-2xl font-bold text-primary">12</div>
-                      <div className="text-sm text-muted-foreground">AI Cover Letters</div>
-                      <div className="text-xs text-muted-foreground mt-1">of 25 limit</div>
+                    <div className="p-4 glass-subtle rounded-xl text-center">
+                      <div className="text-2xl font-bold text-blue-500">12</div>
+                      <div className="text-sm text-adaptive-secondary">AI Cover Letters</div>
+                      <div className="text-xs text-adaptive-muted mt-1">of 25 limit</div>
                     </div>
-                    <div className="p-4 border rounded-lg text-center">
-                      <div className="text-2xl font-bold text-primary">∞</div>
-                      <div className="text-sm text-muted-foreground">Job Searches</div>
-                      <div className="text-xs text-muted-foreground mt-1">unlimited</div>
+                    <div className="p-4 glass-subtle rounded-xl text-center">
+                      <div className="text-2xl font-bold text-blue-500">∞</div>
+                      <div className="text-sm text-adaptive-secondary">Job Searches</div>
+                      <div className="text-xs text-adaptive-muted mt-1">unlimited</div>
                     </div>
                   </div>
                 </div>
@@ -581,16 +581,16 @@ const SettingsPage: React.FC = () => {
 
                 {/* Payment Method */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Payment Method</h3>
-                  <div className="p-4 border rounded-lg">
+                  <h3 className="text-lg font-semibold text-adaptive">Payment Method</h3>
+                  <div className="p-4 glass-subtle rounded-xl">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">
                           VISA
                         </div>
                         <div>
-                          <p className="font-medium">•••• •••• •••• 4242</p>
-                          <p className="text-sm text-muted-foreground">Expires 12/26</p>
+                          <p className="font-medium text-adaptive">•••• •••• •••• 4242</p>
+                          <p className="text-sm text-adaptive-muted">Expires 12/26</p>
                         </div>
                       </div>
                       <Button variant="outline" size="sm">
@@ -602,22 +602,22 @@ const SettingsPage: React.FC = () => {
 
                 {/* Billing History */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Billing History</h3>
+                  <h3 className="text-lg font-semibold text-adaptive">Billing History</h3>
                   <div className="space-y-2">
                     {[
                       { date: 'Dec 1, 2024', amount: '$29.00', status: 'Paid' },
                       { date: 'Nov 1, 2024', amount: '$29.00', status: 'Paid' },
                       { date: 'Oct 1, 2024', amount: '$29.00', status: 'Paid' }
                     ].map((invoice, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div key={index} className="flex items-center justify-between p-3 glass-subtle rounded-xl">
                         <div className="flex items-center space-x-3">
                           <div>
-                            <p className="font-medium">{invoice.date}</p>
-                            <p className="text-sm text-muted-foreground">Pro Plan</p>
+                            <p className="font-medium text-adaptive">{invoice.date}</p>
+                            <p className="text-sm text-adaptive-muted">Pro Plan</p>
                           </div>
                         </div>
                         <div className="flex items-center space-x-3">
-                          <span className="font-medium">{invoice.amount}</span>
+                          <span className="font-medium text-adaptive">{invoice.amount}</span>
                           <Badge variant="outline" className="text-green-600">
                             {invoice.status}
                           </Badge>
@@ -642,11 +642,11 @@ const SettingsPage: React.FC = () => {
           >
             <GlassCard variant="floating" className="p-6 ring-2 ring-red-500/20">
               <div className="mb-6">
-                <h2 className="text-xl font-semibold flex items-center space-x-2 mb-2 text-red-600">
+                <h2 className="text-xl font-semibold flex items-center space-x-2 mb-2 text-red-500">
                   <Trash2 className="w-5 h-5" />
                   <span>Danger Zone</span>
                 </h2>
-                <p className="text-muted-foreground">
+                <p className="text-adaptive-muted">
                   Irreversible and destructive actions
                 </p>
               </div>
@@ -654,8 +654,8 @@ const SettingsPage: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 glass-subtle rounded-lg ring-1 ring-red-500/20">
                   <div>
-                    <h4 className="font-medium text-red-600">Sign Out</h4>
-                    <p className="text-sm text-muted-foreground">Sign out of your account on this device</p>
+                    <h4 className="font-medium text-red-500">Sign Out</h4>
+                    <p className="text-sm text-adaptive-muted">Sign out of your account on this device</p>
                   </div>
                   <FloatingButton variant="glass" className="mt-3 sm:mt-0 text-red-600 hover:bg-red-500/10">
                     <LogOut className="w-4 h-4 mr-2" />
@@ -665,8 +665,8 @@ const SettingsPage: React.FC = () => {
 
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 glass-subtle rounded-lg ring-1 ring-red-500/20">
                   <div>
-                    <h4 className="font-medium text-red-600">Delete Account</h4>
-                    <p className="text-sm text-muted-foreground">Permanently delete your account and all data</p>
+                    <h4 className="font-medium text-red-500">Delete Account</h4>
+                    <p className="text-sm text-adaptive-muted">Permanently delete your account and all data</p>
                   </div>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>

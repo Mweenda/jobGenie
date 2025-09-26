@@ -1,26 +1,101 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Link, useNavigate } from 'react-router-dom'
-import { Search, Bell, User, Settings, LogOut, Sparkles, Bookmark, MessageSquare } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Search, Bell, User, Settings, LogOut, Sparkles, Bookmark, MessageSquare, ChevronDown } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { Input } from '../ui/input'
 import { Avatar, AvatarFallback } from '../ui/avatar'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '../ui/dropdown-menu'
+import { GlassCard } from '../ui/glass-card'
 import { FloatingButton } from '../ui/floating-button'
+import { HamburgerMenu } from '../ui/hamburger-menu'
 
 export default function Header() {
   const { user, isAuthenticated, isLoading, signOut } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [showNotifications, setShowNotifications] = useState(false)
+  const [showUserDropdown, setShowUserDropdown] = useState(false)
+  const userDropdownRef = useRef<HTMLDivElement>(null)
+
+  // Handle click outside for user dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+        setShowUserDropdown(false)
+      }
+    }
+
+    if (showUserDropdown) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showUserDropdown])
+
+  // Close dropdown on escape key
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowUserDropdown(false)
+      }
+    }
+
+    if (showUserDropdown) {
+      document.addEventListener('keydown', handleEscape)
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [showUserDropdown])
 
   const handleSignOut = async () => {
     try {
       await signOut()
       navigate('/')
+      setShowUserDropdown(false)
     } catch (error) {
       console.error('Sign out error:', error)
     }
   }
+
+  const handleUserMenuClick = (path: string) => {
+    navigate(path)
+    setShowUserDropdown(false)
+  }
+
+  const isActivePath = (path: string) => {
+    return location.pathname === path
+  }
+
+  const userMenuOptions = [
+    {
+      id: 'profile',
+      label: 'Profile',
+      path: '/profile',
+      icon: User
+    },
+    {
+      id: 'saved',
+      label: 'Saved Jobs',
+      path: '/saved',
+      icon: Bookmark
+    },
+    {
+      id: 'messages',
+      label: 'Messages',
+      path: '/messages',
+      icon: MessageSquare
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      path: '/settings',
+      icon: Settings
+    }
+  ]
 
   const notifications = [
     {
@@ -57,18 +132,26 @@ export default function Header() {
     >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center space-x-2"
-          >
-            <Link to={isAuthenticated ? "/home" : "/"} className="flex items-center space-x-2">
-              <Sparkles className="w-8 h-8 text-blue-500" />
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                <span className="text-brand-md">JobGenie</span>
-              </span>
-            </Link>
-          </motion.div>
+          {/* Logo with Hamburger Menu */}
+          <div className="flex items-center space-x-3">
+            {/* Hamburger Menu (Authenticated Only) */}
+            {isAuthenticated && (
+              <HamburgerMenu />
+            )}
+            
+            {/* Logo */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center space-x-2"
+            >
+              <Link to={isAuthenticated ? "/home" : "/"} className="flex items-center space-x-2">
+                <Sparkles className="w-8 h-8 text-blue-500" />
+                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  <span className="text-brand-md">JobGenie</span>
+                </span>
+              </Link>
+            </motion.div>
+          </div>
 
           {/* Search Bar (Authenticated Only) */}
           {isAuthenticated && (
@@ -91,18 +174,6 @@ export default function Header() {
               <div className="animate-pulse glass-subtle h-10 w-32 rounded-md" />
             ) : isAuthenticated && user ? (
               <>
-                {/* Quick Nav Links */}
-                <nav className="hidden lg:flex items-center space-x-6">
-                  <Link to="/jobs" className="text-sm hover:text-blue-500 transition-colors">
-                    Jobs
-                  </Link>
-                  <Link to="/saved" className="text-sm hover:text-blue-500 transition-colors">
-                    Saved
-                  </Link>
-                  <Link to="/messages" className="text-sm hover:text-blue-500 transition-colors">
-                    Messages
-                  </Link>
-                </nav>
 
                 {/* Notifications */}
                 <div className="relative">
@@ -126,29 +197,40 @@ export default function Header() {
                       initial={{ opacity: 0, scale: 0.95, y: -10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                      className="absolute right-0 mt-2 w-80 glass-floating rounded-lg z-50"
+                      className="absolute right-0 mt-3 w-96 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 z-50"
                     >
-                      <div className="p-4 border-b border-white/10">
-                        <h3 className="font-semibold">Notifications</h3>
+                      <div className="p-5 border-b border-gray-200/30">
+                        <h3 className="font-semibold text-adaptive text-lg">Notifications</h3>
+                        <p className="text-adaptive-muted text-sm mt-1">{unreadCount} unread notifications</p>
                       </div>
-                      <div className="max-h-96 overflow-y-auto">
+                      <div className="max-h-80 overflow-y-auto">
                         {notifications.map((notification) => (
-                          <div key={notification.id} className={`p-4 border-b border-white/5 hover:glass-prominent transition-colors ${notification.unread ? 'bg-blue-500/5' : ''}`}>
+                          <div 
+                            key={notification.id} 
+                            className={`p-5 border-b border-gray-100/50 hover:bg-gray-50/80 transition-all duration-200 cursor-pointer ${
+                              notification.unread ? 'bg-blue-50/50 border-l-4 border-l-blue-500' : ''
+                            }`}
+                          >
                             <div className="flex justify-between items-start">
-                              <div className="flex-1">
-                                <h4 className="font-medium text-sm">{notification.title}</h4>
-                                <p className="text-muted-foreground text-sm mt-1">{notification.message}</p>
-                                <p className="text-muted-foreground text-xs mt-2">{notification.time}</p>
+                              <div className="flex-1 pr-3">
+                                <div className="flex items-center space-x-2">
+                                  <h4 className="font-semibold text-adaptive text-sm">{notification.title}</h4>
+                                  {notification.unread && (
+                                    <div className="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
+                                  )}
+                                </div>
+                                <p className="text-adaptive-secondary text-sm mt-2 leading-relaxed">{notification.message}</p>
+                                <p className="text-adaptive-muted text-xs mt-3 flex items-center">
+                                  <span className="inline-block w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full mr-2"></span>
+                                  {notification.time}
+                                </p>
                               </div>
-                              {notification.unread && (
-                                <div className="w-2 h-2 bg-blue-500 rounded-full ml-2 mt-1"></div>
-                              )}
                             </div>
                           </div>
                         ))}
                       </div>
-                      <div className="p-3 border-t border-white/10">
-                        <button className="text-blue-500 text-sm hover:text-blue-600 w-full text-center transition-colors">
+                      <div className="p-4 border-t border-gray-200/30 bg-gray-50/30">
+                        <button className="text-blue-600 dark:text-blue-400 font-medium text-sm hover:text-blue-700 dark:hover:text-blue-300 w-full text-center transition-colors py-2 px-4 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20">
                           View all notifications
                         </button>
                       </div>
@@ -156,73 +238,170 @@ export default function Header() {
                   )}
                 </div>
 
-                {/* User Dropdown */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex items-center space-x-2 p-2 rounded-lg glass-subtle hover:glass-prominent transition-all duration-200"
-                    >
-                      <Avatar className="w-8 h-8">
-                        <AvatarFallback className="bg-blue-600 text-white text-sm">
-                          {user.firstName?.[0] || user.email?.[0] || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="hidden md:block text-sm font-medium">
-                        {user.firstName || user.email?.split('@')[0] || 'User'}
-                      </span>
-                    </motion.button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 glass-floating border-white/10">
-                    <div className="flex items-center justify-start gap-2 p-2">
-                      <Avatar className="w-8 h-8">
-                        <AvatarFallback className="bg-blue-600 text-white text-sm">
-                          {user.firstName?.[0] || user.email?.[0] || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium">
-                          {user.firstName && user.lastName
-                            ? `${user.firstName} ${user.lastName}`
-                            : user.firstName || 'User'}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {user.email}
-                        </p>
-                      </div>
-                    </div>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => navigate('/profile')}>
-                      <User className="mr-2 h-4 w-4" />
-                      Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/saved')}>
-                      <Bookmark className="mr-2 h-4 w-4" />
-                      Saved Jobs
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/messages')}>
-                      <MessageSquare className="mr-2 h-4 w-4" />
-                      Messages
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/settings')}>
-                      <Settings className="mr-2 h-4 w-4" />
-                      Settings
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Sign Out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                {/* User Dropdown - Hamburger Menu Style */}
+                <div className="relative" ref={userDropdownRef}>
+                  <motion.button
+                    onClick={() => setShowUserDropdown(!showUserDropdown)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`flex items-center space-x-3 p-3 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
+                      showUserDropdown 
+                        ? 'bg-blue-500/20 text-blue-600 dark:text-blue-400 shadow-lg border border-blue-500/30' 
+                        : 'glass-subtle hover:glass-prominent hover:shadow-md'
+                    }`}
+                    aria-expanded={showUserDropdown}
+                    aria-controls="user-menu"
+                    aria-label={showUserDropdown ? 'Close user menu' : 'Open user menu'}
+                  >
+                    <Avatar className="w-8 h-8">
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-sm font-semibold">
+                        {user.firstName?.[0] || user.email?.[0] || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="hidden md:block text-sm font-medium">
+                      {user.firstName || user.email?.split('@')[0] || 'User'}
+                    </span>
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${
+                      showUserDropdown ? 'rotate-180' : ''
+                    }`} />
+                  </motion.button>
+
+                  {/* User Menu Dropdown */}
+                  <AnimatePresence>
+                    {showUserDropdown && (
+                      <motion.div
+                        id="user-menu"
+                        initial={{ 
+                          opacity: 0, 
+                          scale: 0.95,
+                          x: 10,
+                          y: -5 
+                        }}
+                        animate={{ 
+                          opacity: 1, 
+                          scale: 1,
+                          x: 0,
+                          y: 0 
+                        }}
+                        exit={{ 
+                          opacity: 0, 
+                          scale: 0.95,
+                          x: 10,
+                          y: -5 
+                        }}
+                        transition={{ 
+                          duration: 0.25,
+                          ease: "easeOut",
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 30
+                        }}
+                        className="absolute top-full right-0 mt-2 z-[60] w-[280px]"
+                      >
+                        <GlassCard 
+                          variant="floating" 
+                          className="w-full p-3 shadow-2xl border border-white/30 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl"
+                        >
+                          {/* User Info Header */}
+                          <div className="p-3 mb-2 bg-gradient-to-r from-blue-50/50 to-purple-50/50 rounded-xl border border-blue-100/50">
+                            <div className="flex items-center space-x-3">
+                              <Avatar className="w-10 h-10">
+                                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+                                  {user.firstName?.[0] || user.email?.[0] || 'U'}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-semibold text-adaptive truncate">
+                                  {user.firstName && user.lastName
+                                    ? `${user.firstName} ${user.lastName}`
+                                    : user.firstName || 'User'}
+                                </p>
+                                <p className="text-xs text-adaptive-secondary truncate">
+                                  {user.email}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Menu Options */}
+                          <div className="space-y-1">
+                            {userMenuOptions.map((option, index) => {
+                              const IconComponent = option.icon
+                              const isActive = isActivePath(option.path)
+                              
+                              return (
+                                <motion.button
+                                  key={option.id}
+                                  initial={{ opacity: 0, x: -20 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ 
+                                    duration: 0.2, 
+                                    delay: index * 0.05 
+                                  }}
+                                  onClick={() => handleUserMenuClick(option.path)}
+                                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 font-medium ${
+                                    isActive
+                                      ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-600 dark:text-blue-400 shadow-lg border border-blue-500/30'
+                                      : 'text-adaptive hover:bg-white/50 dark:hover:bg-white/10 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md'
+                                  }`}
+                                  whileHover={{ x: 6, scale: 1.02 }}
+                                  whileTap={{ scale: 0.98 }}
+                                >
+                                  <IconComponent className={`w-4 h-4 ${
+                                    isActive ? 'text-blue-600 dark:text-blue-400' : ''
+                                  }`} />
+                                  <span className="font-medium text-sm">{option.label}</span>
+                                  {isActive && (
+                                    <motion.div
+                                      layoutId="activeUserIndicator"
+                                      className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-500"
+                                      transition={{ duration: 0.2 }}
+                                    />
+                                  )}
+                                </motion.button>
+                              )
+                            })}
+                            
+                            {/* Separator */}
+                            <div className="my-2 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+                            
+                            {/* Sign Out */}
+                            <motion.button
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ 
+                                duration: 0.2, 
+                                delay: userMenuOptions.length * 0.05 
+                              }}
+                              onClick={handleSignOut}
+                              className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:shadow-md"
+                              whileHover={{ x: 6, scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                            >
+                              <LogOut className="w-4 h-4" />
+                              <span className="font-medium text-sm">Sign Out</span>
+                            </motion.button>
+                          </div>
+                        </GlassCard>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </>
             ) : (
               <div className="flex items-center space-x-3">
-                <FloatingButton variant="glass" size="sm">
+                <FloatingButton 
+                  variant="glass" 
+                  size="sm"
+                  onClick={() => navigate('/?action=signin')}
+                >
                   Sign In
                 </FloatingButton>
-                <FloatingButton variant="primary" size="sm">
+                <FloatingButton 
+                  variant="primary" 
+                  size="sm"
+                  onClick={() => navigate('/?action=signup')}
+                >
                   Get Started
                 </FloatingButton>
               </div>
@@ -236,6 +415,12 @@ export default function Header() {
         <div 
           className="fixed inset-0 z-30" 
           onClick={() => setShowNotifications(false)}
+        />
+      )}
+      {showUserDropdown && (
+        <div 
+          className="fixed inset-0 z-30" 
+          onClick={() => setShowUserDropdown(false)}
         />
       )}
     </motion.header>

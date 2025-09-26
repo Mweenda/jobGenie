@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { User, Mail, Edit3, Save, X, Plus } from 'lucide-react'
+import { User, Mail, Edit3, Save, X, Plus, Sparkles, Briefcase, TrendingUp, Bookmark, CheckCircle, AlertCircle } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 // import { useJobStore } from '../../store/jobStore'
 import Button from '../../components/base/Button'
@@ -23,15 +23,24 @@ export default function ProfilePage() {
   const [applications, setApplications] = useState<any[]>([])
   const [skills, setSkills] = useState<UserSkill[]>([])
   const [newSkill, setNewSkill] = useState('')
+  const [updateSuccess, setUpdateSuccess] = useState(false)
+  const [updateError, setUpdateError] = useState('')
   const [formData, setFormData] = useState({
-    firstName: user?.firstName || '',
-    lastName: user?.lastName || '',
-    jobTitle: user?.jobTitle || '',
-    experienceLevel: user?.experienceLevel || 'mid',
+    firstName: '',
+    lastName: '',
+    jobTitle: '',
+    experienceLevel: 'mid',
   })
 
   useEffect(() => {
     if (user) {
+      // Update form data when user data changes
+      setFormData({
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        jobTitle: user.jobTitle || '',
+        experienceLevel: user.experienceLevel || 'mid',
+      })
       loadUserData()
     }
   }, [user])
@@ -51,23 +60,39 @@ export default function ProfilePage() {
   }
 
   const handleSave = async () => {
-    if (!user) return
+    if (!user) {
+      setUpdateError('No authenticated user found')
+      return
+    }
+    
+    // Clear previous messages
+    setUpdateSuccess(false)
+    setUpdateError('')
     
     try {
+      console.log('Updating profile for user:', user.id, 'with data:', formData)
       await updateProfile(formData)
       setIsEditing(false)
+      setUpdateSuccess(true)
+      console.log('Profile updated successfully')
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setUpdateSuccess(false), 3000)
     } catch (error) {
       console.error('Error updating profile:', error)
+      setUpdateError(error instanceof Error ? error.message : 'Failed to update profile. Please try again.')
     }
   }
 
   const handleCancel = () => {
-    setFormData({
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      jobTitle: user?.jobTitle || '',
-      experienceLevel: user?.experienceLevel || 'mid',
-    })
+    if (user) {
+      setFormData({
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        jobTitle: user.jobTitle || '',
+        experienceLevel: user.experienceLevel || 'mid',
+      })
+    }
     setIsEditing(false)
   }
 
@@ -105,30 +130,32 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       <Header />
       
-      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8 pt-24">
         {/* Profile Header */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
-                <User className="w-10 h-10 text-blue-600" />
+        <div className="glass-floating rounded-2xl p-8 mb-8 backdrop-blur-xl">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between space-y-6 lg:space-y-0">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <User className="w-12 h-12 text-white" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">
+              <div className="text-center sm:text-left">
+                <h1 className="text-3xl font-bold text-adaptive mb-2">
                   {user.firstName} {user.lastName}
                 </h1>
-                <p className="text-gray-600">{user.jobTitle || 'Job Title Not Set'}</p>
-                <div className="flex items-center text-sm text-gray-500 mt-1">
-                  <Mail className="w-4 h-4 mr-1" />
-                  {user.email}
+                <p className="text-lg text-adaptive-secondary mb-3">{user.jobTitle || 'Job Title Not Set'}</p>
+                <div className="flex items-center justify-center sm:justify-start text-adaptive-muted space-x-2">
+                  <div className="p-1.5 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm">{user.email}</span>
                 </div>
               </div>
             </div>
             
-            <div className="flex space-x-2">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
               {isEditing ? (
                 <>
                   <Button
@@ -136,17 +163,19 @@ export default function ProfilePage() {
                     size="sm"
                     onClick={handleCancel}
                     disabled={isLoading}
+                    className="glass-subtle hover:glass-prominent border-gray-300 text-gray-700"
                   >
-                    <X className="w-4 h-4 mr-1" />
+                    <X className="w-4 h-4 mr-2" />
                     Cancel
                   </Button>
                   <Button
                     size="sm"
                     onClick={handleSave}
                     loading={isLoading}
+                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg"
                   >
-                    <Save className="w-4 h-4 mr-1" />
-                    Save
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Changes
                   </Button>
                 </>
               ) : (
@@ -154,8 +183,9 @@ export default function ProfilePage() {
                   variant="outline"
                   size="sm"
                   onClick={() => setIsEditing(true)}
+                  className="glass-subtle hover:glass-prominent border-blue-300 text-blue-700 hover:text-blue-800"
                 >
-                  <Edit3 className="w-4 h-4 mr-1" />
+                  <Edit3 className="w-4 h-4 mr-2" />
                   Edit Profile
                 </Button>
               )}
@@ -163,12 +193,32 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Success/Error Messages */}
+        {updateSuccess && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center space-x-3">
+            <CheckCircle className="w-5 h-5 text-green-600" />
+            <span className="text-green-800 font-medium">Profile updated successfully!</span>
+          </div>
+        )}
+        
+        {updateError && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center space-x-3">
+            <AlertCircle className="w-5 h-5 text-red-600" />
+            <span className="text-red-800 font-medium">{updateError}</span>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Profile Information */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-8">
             {/* Basic Information */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+            <div className="glass-floating rounded-2xl p-6 backdrop-blur-xl">
+              <h2 className="text-xl font-semibold text-adaptive mb-6 flex items-center">
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg mr-3">
+                  <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                Basic Information
+              </h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
@@ -191,14 +241,14 @@ export default function ProfilePage() {
                   placeholder="e.g. Senior Software Engineer"
                 />
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-adaptive mb-1">
                     Experience Level
                   </label>
                   <select
                     value={formData.experienceLevel}
                     onChange={(e) => setFormData({ ...formData, experienceLevel: e.target.value })}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 glass-subtle border-0 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:glass-prominent disabled:opacity-50 text-adaptive"
                   >
                     <option value="entry">Entry Level</option>
                     <option value="mid">Mid Level</option>
@@ -210,8 +260,13 @@ export default function ProfilePage() {
             </div>
 
             {/* Skills */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Skills</h2>
+            <div className="glass-floating rounded-2xl p-6 backdrop-blur-xl">
+              <h2 className="text-xl font-semibold text-adaptive mb-6 flex items-center">
+                <div className="p-2 bg-purple-100 rounded-lg mr-3">
+                  <Sparkles className="w-5 h-5 text-purple-600" />
+                </div>
+                Skills & Expertise
+              </h2>
               
               {isEditing && (
                 <div className="flex space-x-2 mb-4">
@@ -237,7 +292,7 @@ export default function ProfilePage() {
                   skills.map((skill) => (
                     <div key={skill.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div className="flex-1">
-                        <span className="font-medium text-gray-900">{skill.skillName}</span>
+                        <span className="font-medium text-adaptive">{skill.skillName}</span>
                         <div className="flex items-center mt-1">
                           {[1, 2, 3, 4, 5].map((level) => (
                             <button
@@ -271,8 +326,13 @@ export default function ProfilePage() {
             </div>
 
             {/* Recent Applications */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Applications</h2>
+            <div className="glass-floating rounded-2xl p-6 backdrop-blur-xl">
+              <h2 className="text-xl font-semibold text-adaptive mb-6 flex items-center">
+                <div className="p-2 bg-green-100 rounded-lg mr-3">
+                  <Briefcase className="w-5 h-5 text-green-600" />
+                </div>
+                Recent Applications
+              </h2>
               
               {applications.length === 0 ? (
                 <p className="text-gray-500 text-center py-8">No applications yet</p>
@@ -282,7 +342,7 @@ export default function ProfilePage() {
                     <div key={application.id} className="border rounded-lg p-4">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="font-semibold text-gray-900">{application.job.title}</h3>
+                          <h3 className="font-semibold text-adaptive">{application.job.title}</h3>
                           <p className="text-gray-600">{application.job.company.name}</p>
                           <p className="text-sm text-gray-500 mt-1">
                             Applied {formatJobPostedDate(application.applied_at)}
@@ -308,34 +368,44 @@ export default function ProfilePage() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-8">
             {/* Profile Stats */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Profile Stats</h3>
+            <div className="glass-floating rounded-2xl p-6 backdrop-blur-xl">
+              <h3 className="text-xl font-semibold text-adaptive mb-6 flex items-center">
+                <div className="p-2 bg-orange-100 rounded-lg mr-3">
+                  <TrendingUp className="w-5 h-5 text-orange-600" />
+                </div>
+                Profile Stats
+              </h3>
               
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Profile Views</span>
-                  <span className="font-semibold text-gray-900">127</span>
+                  <span className="font-semibold text-adaptive">127</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Applications</span>
-                  <span className="font-semibold text-gray-900">{applications.length}</span>
+                  <span className="font-semibold text-adaptive">{applications.length}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Saved Jobs</span>
-                  <span className="font-semibold text-gray-900">{savedJobs.length}</span>
+                  <span className="font-semibold text-adaptive">{savedJobs.length}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Skills</span>
-                  <span className="font-semibold text-gray-900">{skills.length}</span>
+                  <span className="font-semibold text-adaptive">{skills.length}</span>
                 </div>
               </div>
             </div>
 
             {/* Saved Jobs */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Saved Jobs</h3>
+            <div className="glass-floating rounded-2xl p-6 backdrop-blur-xl">
+              <h3 className="text-xl font-semibold text-adaptive mb-6 flex items-center">
+                <div className="p-2 bg-blue-100 rounded-lg mr-3">
+                  <Bookmark className="w-5 h-5 text-blue-600" />
+                </div>
+                Saved Jobs
+              </h3>
               
               {savedJobs.length === 0 ? (
                 <p className="text-gray-500 text-center py-4">No saved jobs yet</p>
@@ -343,7 +413,7 @@ export default function ProfilePage() {
                 <div className="space-y-3">
                   {savedJobs.slice(0, 3).map((job) => (
                     <div key={job.id} className="border rounded-lg p-3">
-                      <h4 className="font-medium text-gray-900 text-sm">{job.title}</h4>
+                      <h4 className="font-medium text-adaptive text-sm">{job.title}</h4>
                       <p className="text-gray-600 text-sm">{job.company.name}</p>
                       <p className="text-gray-500 text-xs mt-1">
                         {formatSalary(job.salaryMin, job.salaryMax)}

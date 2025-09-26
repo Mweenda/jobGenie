@@ -127,53 +127,57 @@ const ConversationItem: React.FC<{
       className="px-3 mb-2"
     >
       <motion.div
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className={`relative cursor-pointer transition-all duration-200 ${
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+        className={`relative cursor-pointer rounded-xl transition-all duration-200 ${
           isSelected 
-            ? 'glass-floating ring-2 ring-blue-400/30' 
-            : 'glass-subtle hover:glass-prominent'
+            ? 'bg-blue-50/80 border border-blue-200/50 shadow-md' 
+            : 'hover:bg-white/40 hover:shadow-sm'
         }`}
         onClick={onClick}
       >
-        <div className="p-4">
-          <div className="flex items-start space-x-3">
-            <div className="relative">
-              <Avatar className="w-12 h-12">
-                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white">
+        <div className="p-3">
+          <div className="flex items-center space-x-3">
+            {/* Avatar */}
+            <div className="relative flex-shrink-0">
+              <Avatar className="w-10 h-10">
+                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white text-sm font-semibold">
                   {conversation.name.split(' ').map((n: string) => n[0]).join('')}
                 </AvatarFallback>
               </Avatar>
               {conversation.online && (
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full" />
+                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
               )}
             </div>
             
+            {/* Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
-                <h3 className="font-semibold text-sm truncate">
+                <h3 className="font-semibold text-sm text-adaptive truncate">
                   {conversation.name}
                 </h3>
-                <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
-                  {conversation.timestamp}
-                </span>
+                <div className="flex items-center space-x-2 flex-shrink-0">
+                  <span className="text-xs text-gray-500">
+                    {conversation.timestamp}
+                  </span>
+                  {conversation.unread > 0 && (
+                    <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                  )}
+                </div>
               </div>
               
-              <p className="text-sm text-muted-foreground mb-2 flex items-center">
-                <Briefcase className="w-3 h-3 mr-1" />
+              <p className="text-xs text-adaptive-secondary mb-1.5 flex items-center">
+                <Briefcase className="w-3 h-3 mr-1 text-gray-400 dark:text-gray-500" />
                 {conversation.role} at {conversation.company}
               </p>
               
-              <p className="text-xs text-muted-foreground truncate mb-2 leading-relaxed">
-                {conversation.lastMessage}
-              </p>
-              
               <div className="flex items-center justify-between">
-                <Badge variant="outline" className="text-xs">
-                  {conversation.jobTitle}
-                </Badge>
+                <p className="text-xs text-adaptive-muted truncate pr-2 leading-relaxed flex-1">
+                  {conversation.lastMessage}
+                </p>
+                
                 {conversation.unread > 0 && (
-                  <Badge className="bg-blue-500 text-white text-xs min-w-[20px] h-5">
+                  <Badge className="bg-blue-500 text-white text-xs px-1.5 py-0.5 h-5 min-w-[20px] flex-shrink-0">
                     {conversation.unread}
                   </Badge>
                 )}
@@ -194,16 +198,16 @@ const MessageBubble: React.FC<{ message: any; isMe: boolean; delay: number }> = 
       transition={{ duration: 0.3, delay }}
       className={`flex mb-4 ${isMe ? "justify-end" : "justify-start"}`}
     >
-      <div
-        className={`max-w-[70%] rounded-2xl px-4 py-3 text-sm relative ${
-          isMe 
-            ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white glass-floating" 
-            : "glass-prominent"
-        }`}
-      >
-        <p className="leading-relaxed">{message.content}</p>
+                <div
+                  className={`max-w-[85%] sm:max-w-[70%] rounded-2xl px-4 py-3 text-sm relative ${
+                    isMe 
+                      ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg" 
+                      : "glass-prominent"
+                  }`}
+                >
+        <p className={`leading-relaxed ${isMe ? "text-white" : "text-adaptive"}`}>{message.content}</p>
         <div className={`flex items-center justify-end mt-2 space-x-1 text-xs ${
-          isMe ? "text-blue-100" : "text-muted-foreground"
+          isMe ? "text-blue-100" : "text-adaptive-muted"
         }`}>
           <span>{message.timestamp}</span>
           {isMe && (
@@ -269,52 +273,63 @@ const MessagesPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       <Header />
       
-      <div className="h-screen pt-16 sm:pt-20 flex">
+      <div className="h-screen pt-16 sm:pt-20 flex max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         {/* Conversations Sidebar */}
-        <div className={`w-full md:w-80 lg:w-96 flex flex-col ${
+        <div className={`w-full md:w-72 lg:w-80 flex flex-col ${
           !showConversationList && "hidden md:flex"
         }`}>
-          <div className="h-full p-2 sm:p-4">
-            <GlassCard variant="floating" className="h-full flex flex-col">
+          <div className="h-full pr-3 py-4">
+            <GlassCard variant="floating" className="h-full flex flex-col shadow-xl">
               {/* Sidebar Header */}
-              <div className="p-4 sm:p-6 border-b border-white/10">
+              <div className="p-5 border-b border-white/10">
                 <motion.div
-                  initial={{ opacity: 0, y: -20 }}
+                  initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.4 }}
+                  className="space-y-4"
                 >
-                  <h1 className="text-lg sm:text-display-md mb-3 sm:mb-4 flex items-center space-x-2">
-                    <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />
-                    <span>Messages</span>
-                  </h1>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-blue-100 rounded-xl">
+                        <MessageSquare className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <h1 className="text-lg font-bold text-adaptive">Messages</h1>
+                        <p className="text-xs text-adaptive-muted">{mockConversations.length} conversations</p>
+                      </div>
+                    </div>
+                  </div>
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
                       placeholder="Search conversations..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 glass-subtle border-0"
+                      className="pl-10 bg-white/60 border border-gray-200/50 rounded-xl text-sm focus:bg-white/80 transition-all"
                     />
                   </div>
                 </motion.div>
               </div>
 
               {/* Conversations List */}
-              <div className="flex-1 overflow-y-auto py-4">
-                <AnimatePresence>
-                  {filteredConversations.length > 0 ? (
-                    filteredConversations.map((conversation, index) => (
-                      <ConversationItem
-                        key={conversation.id}
-                        conversation={conversation}
-                        isSelected={selectedConversation?.id === conversation.id}
-                        delay={index * 0.1}
-                        onClick={() => {
-                          setSelectedConversation(conversation)
-                          setShowConversationList(false)
-                        }}
-                      />
-                    ))
+              <div className="flex-1 overflow-y-auto">
+                <div className="px-3 py-2">
+                  <AnimatePresence>
+                    {filteredConversations.length > 0 ? (
+                      <div className="space-y-2">
+                        {filteredConversations.map((conversation, index) => (
+                          <ConversationItem
+                            key={conversation.id}
+                            conversation={conversation}
+                            isSelected={selectedConversation?.id === conversation.id}
+                            delay={index * 0.05}
+                            onClick={() => {
+                              setSelectedConversation(conversation)
+                              setShowConversationList(false)
+                            }}
+                          />
+                        ))}
+                      </div>
                   ) : (
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -325,17 +340,18 @@ const MessagesPage: React.FC = () => {
                       <p className="text-muted-foreground">No conversations found</p>
                     </motion.div>
                   )}
-                </AnimatePresence>
+                  </AnimatePresence>
+                </div>
               </div>
             </GlassCard>
           </div>
         </div>
 
         {/* Chat Area */}
-        <div className={`flex-1 flex flex-col ${
+        <div className={`flex-1 flex flex-col min-w-0 ${
           showConversationList && "hidden md:flex"
         }`}>
-          <div className="h-full p-4">
+          <div className="h-full py-4 pl-3">
             {selectedConversation ? (
               <GlassCard variant="floating" className="h-full flex flex-col">
                 {/* Chat Header */}
@@ -343,7 +359,7 @@ const MessagesPage: React.FC = () => {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="p-4 border-b border-white/10 glass-subtle"
+                  className="p-5 border-b border-white/10"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -368,11 +384,17 @@ const MessagesPage: React.FC = () => {
                       </div>
                       
                       <div>
-                        <h2 className="font-semibold">{selectedConversation.name}</h2>
-                        <p className="text-sm text-muted-foreground flex items-center">
-                          <Briefcase className="w-3 h-3 mr-1" />
-                          {selectedConversation.role} at {selectedConversation.company}
-                        </p>
+                        <h2 className="text-lg font-bold text-adaptive">{selectedConversation.name}</h2>
+                        <div className="flex items-center space-x-3 text-sm">
+                          <p className="text-adaptive-secondary flex items-center">
+                            <Briefcase className="w-3 h-3 mr-1.5" />
+                            {selectedConversation.role} at {selectedConversation.company}
+                          </p>
+                          <span className="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full"></span>
+                          <p className="text-adaptive-muted">
+                            {selectedConversation.online ? 'Online now' : 'Last seen recently'}
+                          </p>
+                        </div>
                       </div>
                     </div>
 
@@ -428,8 +450,8 @@ const MessagesPage: React.FC = () => {
                 </motion.div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4">
-                  <div className="space-y-2">
+                <div className="flex-1 overflow-y-auto p-3 sm:p-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {mockMessages.map((message, index) => (
                       <MessageBubble
                         key={message.id}
@@ -447,41 +469,39 @@ const MessagesPage: React.FC = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="p-4"
+                  className="p-5 border-t border-white/10"
                 >
-                  <div className="glass-floating p-3 rounded-2xl">
-                    <div className="flex items-end space-x-3">
-                      <FloatingButton variant="glass" size="sm" className="shrink-0">
-                        <Paperclip className="w-4 h-4" />
-                      </FloatingButton>
-                      
-                      <div className="flex-1 relative">
-                        <Input
-                          placeholder="Type a message..."
-                          value={newMessage}
-                          onChange={(e) => setNewMessage(e.target.value)}
-                          onKeyPress={handleKeyPress}
-                          className="glass-subtle border-0 pr-12 rounded-xl"
-                        />
-                        <FloatingButton
-                          variant="glass"
-                          size="sm"
-                          className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                        >
-                          <Smile className="w-4 h-4" />
-                        </FloatingButton>
-                      </div>
-                      
+                  <div className="flex items-end space-x-3">
+                    <FloatingButton variant="glass" size="sm" className="opacity-80 hover:opacity-100 flex-shrink-0">
+                      <Paperclip className="w-4 h-4" />
+                    </FloatingButton>
+                    
+                    <div className="flex-1 relative">
+                      <Input
+                        placeholder="Type your message..."
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        className="bg-white/80 border border-gray-200/50 rounded-xl py-3 px-4 pr-12 text-sm focus:bg-white focus:border-blue-300 transition-all"
+                      />
                       <FloatingButton
-                        onClick={handleSendMessage}
-                        disabled={!newMessage.trim()}
-                        variant="primary"
+                        variant="glass"
                         size="sm"
-                        className="shrink-0"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-70 hover:opacity-100"
                       >
-                        <Send className="w-4 h-4" />
+                        <Smile className="w-4 h-4" />
                       </FloatingButton>
                     </div>
+                    
+                    <FloatingButton
+                      onClick={handleSendMessage}
+                      disabled={!newMessage.trim()}
+                      variant="primary"
+                      size="sm"
+                      className="flex-shrink-0 bg-blue-500 hover:bg-blue-600 disabled:opacity-50"
+                    >
+                      <Send className="w-4 h-4" />
+                    </FloatingButton>
                   </div>
                 </motion.div>
               </GlassCard>

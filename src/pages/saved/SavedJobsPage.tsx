@@ -255,7 +255,7 @@ const SavedJobsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       <Header />
-      <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8 pt-20 sm:pt-24">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8 pt-20 sm:pt-24 max-w-7xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -265,11 +265,11 @@ const SavedJobsPage: React.FC = () => {
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-4 sm:space-y-0">
             <div className="text-center sm:text-left">
-              <h1 className="text-xl sm:text-display-lg mb-2 flex items-center justify-center sm:justify-start space-x-2">
+              <h1 className="text-xl sm:text-display-lg mb-2 flex items-center justify-center sm:justify-start space-x-2 text-adaptive">
                 <Bookmark className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500" />
                 <span>Saved Jobs</span>
               </h1>
-              <p className="text-sm sm:text-body-lg text-muted-foreground">Keep track of opportunities you're interested in</p>
+              <p className="text-sm sm:text-body-lg text-adaptive-secondary">Keep track of opportunities you're interested in</p>
             </div>
             
             <FloatingButton
@@ -361,7 +361,7 @@ const SavedJobsPage: React.FC = () => {
 
           {/* Saved Jobs Grid */}
           {filteredJobs.length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
               {filteredJobs.map((job, index) => (
                 <SavedJobCard
                   key={job.id}
