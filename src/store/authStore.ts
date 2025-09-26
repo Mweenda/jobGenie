@@ -95,17 +95,30 @@ export const useAuthStore = create<AuthState>()(
       },
 
       updateProfile: async (updates) => {
-        const { user } = get()
+        const { user, firebaseUser } = get()
         if (!user) throw new Error('No user logged in')
+        if (!firebaseUser) throw new Error('No Firebase user found')
 
         set({ isLoading: true })
         try {
-          await AuthService.updateUserProfile(user.id, updates)
-          set({
-            user: { ...user, ...updates },
-            isLoading: false
-          })
+          console.log('Auth store: Updating profile for user:', user.id)
+          const updatedProfile = await AuthService.updateUserProfile(user.id, updates)
+          
+          if (updatedProfile) {
+            console.log('Auth store: Profile updated successfully, setting new user data')
+            set({
+              user: updatedProfile,
+              isLoading: false
+            })
+          } else {
+            // Fallback to merging updates with current user
+            set({
+              user: { ...user, ...updates },
+              isLoading: false
+            })
+          }
         } catch (error) {
+          console.error('Auth store: Profile update failed:', error)
           set({ isLoading: false })
           throw error
         }

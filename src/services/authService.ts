@@ -161,19 +161,40 @@ export class AuthService {
   }
 
   /**
-   * Update user profile
+   * Update user profile with enhanced validation and isolation
    */
   static async updateUserProfile(userId: string, updates: Partial<AuthUser>) {
     try {
+      if (!userId) {
+        throw new Error('User ID is required for profile updates')
+      }
+
+      console.log('Updating profile for user:', userId, 'with updates:', updates)
+      
       const docRef = doc(db, 'users', userId)
       
+      // First check if the user document exists
+      const docSnap = await getDoc(docRef)
+      if (!docSnap.exists()) {
+        throw new Error('User profile not found')
+      }
+
+      // Filter out undefined values and ensure proper data types
+      const cleanUpdates = Object.fromEntries(
+        Object.entries(updates).filter(([_, value]) => value !== undefined)
+      )
+
       await updateDoc(docRef, {
-        ...updates,
+        ...cleanUpdates,
         updatedAt: new Date().toISOString(),
       })
 
-      // Get the updated profile
+      console.log('Profile updated successfully in Firestore')
+
+      // Get the updated profile to return fresh data
       const updatedProfile = await this.getUserProfile(userId)
+      console.log('Retrieved updated profile:', updatedProfile)
+      
       return updatedProfile
     } catch (error) {
       console.error('Update user profile error:', error)

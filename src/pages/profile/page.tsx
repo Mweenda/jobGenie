@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { User, Mail, Edit3, Save, X, Plus, Sparkles, Briefcase, TrendingUp, Bookmark } from 'lucide-react'
+import { User, Mail, Edit3, Save, X, Plus, Sparkles, Briefcase, TrendingUp, Bookmark, CheckCircle, AlertCircle } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 // import { useJobStore } from '../../store/jobStore'
 import Button from '../../components/base/Button'
@@ -23,15 +23,24 @@ export default function ProfilePage() {
   const [applications, setApplications] = useState<any[]>([])
   const [skills, setSkills] = useState<UserSkill[]>([])
   const [newSkill, setNewSkill] = useState('')
+  const [updateSuccess, setUpdateSuccess] = useState(false)
+  const [updateError, setUpdateError] = useState('')
   const [formData, setFormData] = useState({
-    firstName: user?.firstName || '',
-    lastName: user?.lastName || '',
-    jobTitle: user?.jobTitle || '',
-    experienceLevel: user?.experienceLevel || 'mid',
+    firstName: '',
+    lastName: '',
+    jobTitle: '',
+    experienceLevel: 'mid',
   })
 
   useEffect(() => {
     if (user) {
+      // Update form data when user data changes
+      setFormData({
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        jobTitle: user.jobTitle || '',
+        experienceLevel: user.experienceLevel || 'mid',
+      })
       loadUserData()
     }
   }, [user])
@@ -51,23 +60,39 @@ export default function ProfilePage() {
   }
 
   const handleSave = async () => {
-    if (!user) return
+    if (!user) {
+      setUpdateError('No authenticated user found')
+      return
+    }
+    
+    // Clear previous messages
+    setUpdateSuccess(false)
+    setUpdateError('')
     
     try {
+      console.log('Updating profile for user:', user.id, 'with data:', formData)
       await updateProfile(formData)
       setIsEditing(false)
+      setUpdateSuccess(true)
+      console.log('Profile updated successfully')
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setUpdateSuccess(false), 3000)
     } catch (error) {
       console.error('Error updating profile:', error)
+      setUpdateError(error instanceof Error ? error.message : 'Failed to update profile. Please try again.')
     }
   }
 
   const handleCancel = () => {
-    setFormData({
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      jobTitle: user?.jobTitle || '',
-      experienceLevel: user?.experienceLevel || 'mid',
-    })
+    if (user) {
+      setFormData({
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        jobTitle: user.jobTitle || '',
+        experienceLevel: user.experienceLevel || 'mid',
+      })
+    }
     setIsEditing(false)
   }
 
@@ -168,6 +193,21 @@ export default function ProfilePage() {
           </div>
         </div>
 
+        {/* Success/Error Messages */}
+        {updateSuccess && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center space-x-3">
+            <CheckCircle className="w-5 h-5 text-green-600" />
+            <span className="text-green-800 font-medium">Profile updated successfully!</span>
+          </div>
+        )}
+        
+        {updateError && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center space-x-3">
+            <AlertCircle className="w-5 h-5 text-red-600" />
+            <span className="text-red-800 font-medium">{updateError}</span>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Profile Information */}
           <div className="lg:col-span-2 space-y-8">
@@ -201,14 +241,14 @@ export default function ProfilePage() {
                   placeholder="e.g. Senior Software Engineer"
                 />
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-adaptive mb-1">
                     Experience Level
                   </label>
                   <select
                     value={formData.experienceLevel}
                     onChange={(e) => setFormData({ ...formData, experienceLevel: e.target.value })}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 glass-subtle border-0 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:glass-prominent disabled:opacity-50 text-adaptive"
                   >
                     <option value="entry">Entry Level</option>
                     <option value="mid">Mid Level</option>
@@ -221,7 +261,7 @@ export default function ProfilePage() {
 
             {/* Skills */}
             <div className="glass-floating rounded-2xl p-6 backdrop-blur-xl">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <h2 className="text-xl font-semibold text-adaptive mb-6 flex items-center">
                 <div className="p-2 bg-purple-100 rounded-lg mr-3">
                   <Sparkles className="w-5 h-5 text-purple-600" />
                 </div>
@@ -252,7 +292,7 @@ export default function ProfilePage() {
                   skills.map((skill) => (
                     <div key={skill.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div className="flex-1">
-                        <span className="font-medium text-gray-900">{skill.skillName}</span>
+                        <span className="font-medium text-adaptive">{skill.skillName}</span>
                         <div className="flex items-center mt-1">
                           {[1, 2, 3, 4, 5].map((level) => (
                             <button
@@ -287,7 +327,7 @@ export default function ProfilePage() {
 
             {/* Recent Applications */}
             <div className="glass-floating rounded-2xl p-6 backdrop-blur-xl">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <h2 className="text-xl font-semibold text-adaptive mb-6 flex items-center">
                 <div className="p-2 bg-green-100 rounded-lg mr-3">
                   <Briefcase className="w-5 h-5 text-green-600" />
                 </div>
@@ -302,7 +342,7 @@ export default function ProfilePage() {
                     <div key={application.id} className="border rounded-lg p-4">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="font-semibold text-gray-900">{application.job.title}</h3>
+                          <h3 className="font-semibold text-adaptive">{application.job.title}</h3>
                           <p className="text-gray-600">{application.job.company.name}</p>
                           <p className="text-sm text-gray-500 mt-1">
                             Applied {formatJobPostedDate(application.applied_at)}
@@ -331,7 +371,7 @@ export default function ProfilePage() {
           <div className="space-y-8">
             {/* Profile Stats */}
             <div className="glass-floating rounded-2xl p-6 backdrop-blur-xl">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <h3 className="text-xl font-semibold text-adaptive mb-6 flex items-center">
                 <div className="p-2 bg-orange-100 rounded-lg mr-3">
                   <TrendingUp className="w-5 h-5 text-orange-600" />
                 </div>
@@ -341,26 +381,26 @@ export default function ProfilePage() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Profile Views</span>
-                  <span className="font-semibold text-gray-900">127</span>
+                  <span className="font-semibold text-adaptive">127</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Applications</span>
-                  <span className="font-semibold text-gray-900">{applications.length}</span>
+                  <span className="font-semibold text-adaptive">{applications.length}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Saved Jobs</span>
-                  <span className="font-semibold text-gray-900">{savedJobs.length}</span>
+                  <span className="font-semibold text-adaptive">{savedJobs.length}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Skills</span>
-                  <span className="font-semibold text-gray-900">{skills.length}</span>
+                  <span className="font-semibold text-adaptive">{skills.length}</span>
                 </div>
               </div>
             </div>
 
             {/* Saved Jobs */}
             <div className="glass-floating rounded-2xl p-6 backdrop-blur-xl">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <h3 className="text-xl font-semibold text-adaptive mb-6 flex items-center">
                 <div className="p-2 bg-blue-100 rounded-lg mr-3">
                   <Bookmark className="w-5 h-5 text-blue-600" />
                 </div>
@@ -373,7 +413,7 @@ export default function ProfilePage() {
                 <div className="space-y-3">
                   {savedJobs.slice(0, 3).map((job) => (
                     <div key={job.id} className="border rounded-lg p-3">
-                      <h4 className="font-medium text-gray-900 text-sm">{job.title}</h4>
+                      <h4 className="font-medium text-adaptive text-sm">{job.title}</h4>
                       <p className="text-gray-600 text-sm">{job.company.name}</p>
                       <p className="text-gray-500 text-xs mt-1">
                         {formatSalary(job.salaryMin, job.salaryMax)}
